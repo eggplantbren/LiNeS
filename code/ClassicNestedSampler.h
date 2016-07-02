@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <ctime>
 #include "DNest4/code/RNG.h"
-#include "ResultLogger.h"
+#include "ClassicLogger.h"
 
 namespace LiNeS
 {
@@ -32,7 +32,7 @@ class ClassicNestedSampler
         std::vector<double> tiebreakers;
 
         // Results get stored here.
-        ResultLogger result_logger;
+        ClassicLogger logger;
 
     public:
         /*

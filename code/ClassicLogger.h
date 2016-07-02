@@ -1,5 +1,5 @@
-#ifndef LiNeS_ResultLogger
-#define LiNeS_ResultLogger
+#ifndef LiNeS_ClassicLogger
+#define LiNeS_ClassicLogger
 
 #include <vector>
 #include <stddef.h>
@@ -7,7 +7,7 @@
 namespace LiNeS
 {
 
-class ResultLogger
+class ClassicLogger
 {
     private:
         // Number of particles in the run
@@ -22,7 +22,7 @@ class ResultLogger
         * Constructor arguments:
         *       size_t num_particles - number of particles in the run
         */
-        ResultLogger(size_t num_particles);
+        ClassicLogger(size_t num_particles);
 
         /*
         * log a particle

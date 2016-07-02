@@ -16,7 +16,7 @@ ClassicNestedSampler<ModelType>::
 ,particles(num_particles)
 ,log_likelihoods(num_particles)
 ,tiebreakers(num_particles)
-,result_logger(num_particles)
+,logger(num_particles)
 {
     if(num_particles == 0)
         throw std::domain_error("ERROR constructing ClassicNestedSampler:\
@@ -82,7 +82,7 @@ double ClassicNestedSampler<ModelType>::run(double max_depth,
 {
     while(get_depth() < max_depth)
         do_iteration(mcmc_steps);
-    return result_logger.calculate_logZ();
+    return logger.calculate_logZ();
 }
 
 
@@ -96,13 +96,13 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
 
     // Find and save worst particle
     size_t worst = find_worst_particle();
-    result_logger.log_particle(log_likelihoods[worst], tiebreakers[worst]);
+    logger.log_particle(log_likelihoods[worst], tiebreakers[worst]);
 
     std::cout<<std::setprecision(12);
     std::cout<<"# Iteration "<<iteration<<". ";
     std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
     std::cout<<"log(L) = "<<log_likelihoods[worst]<<"."<<std::endl;
-    std::cout<<"#    log(Z) = "<<result_logger.calculate_logZ()<<". ";
+    std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";
 
     // Keep threshold
     double logl_threshold = log_likelihoods[worst];
