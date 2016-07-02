@@ -13,5 +13,11 @@ ResultLogger::ResultLogger(size_t num_particles)
             ("ERROR constructing ResultLogger: num_particles can't be zero.");
 }
 
+void ResultLogger::log_particle(double logl, double tb)
+{
+    log_likelihoods.push_back(logl);
+    tiebreakers.push_back(tb);
+}
+
 } // namespace LiNeS
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <stddef.h>
 #include "DNest4/code/RNG.h"
+#include "ResultLogger.h"
 
 namespace LiNeS
 {
@@ -32,6 +33,9 @@ class ClassicNestedSampler
         std::vector<double> log_likelihoods;
         std::vector<double> tiebreakers;
 
+        // Results get stored here.
+        ResultLogger result_logger;
+
     public:
         /*
         * Constructor arguments:
@@ -43,7 +47,7 @@ class ClassicNestedSampler
         /*
         * Do an iteration of Nested Sampling.
         */
-        void do_iteration();
+        void do_iteration(unsigned int mcmc_steps=10000);
 
     private:
         /*
