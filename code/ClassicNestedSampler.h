@@ -52,6 +52,12 @@ class ClassicNestedSampler
         */
         double run(double max_depth, unsigned int mcmc_steps=1000);
 
+        /*
+        * Get the logger (returns a copy)
+        */
+        ClassicLogger get_logger() const
+        { return logger; }
+
     private:
         /*
         * Initialise the particles by generating them from the prior.

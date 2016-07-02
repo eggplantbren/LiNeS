@@ -36,6 +36,16 @@ class ClassicLogger
         * Calculate log(Z)
         */
         double calculate_logZ(double temperature=1.0) const;
+
+        /*
+        * Getters (these return copies)
+        */
+        size_t get_num_particles() const
+        { return num_particles; }
+        std::vector<double> get_log_likelihoods() const
+        { return log_likelihoods; }
+        std::vector<double> get_tiebreakers() const
+        { return tiebreakers; }
 };
 
 } // namespace LiNeS
