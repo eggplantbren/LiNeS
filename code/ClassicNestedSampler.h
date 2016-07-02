@@ -17,8 +17,12 @@ class ClassicNestedSampler
         // A random number generator to use.
         DNest4::RNG rng;
 
-        // The particles
+        // The number of particles
+        std::size_t num_particles;
+
+        // The particles and their log-likelihoods
         std::vector<ModelType> particles;
+        std::vector<double> log_likelihoods;
 
     public:
         /*

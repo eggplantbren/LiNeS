@@ -6,7 +6,9 @@ namespace LiNeS
 template<class ModelType>
 ClassicNestedSampler<ModelType>::
     ClassicNestedSampler(std::size_t num_particles, unsigned int seed)
-:particles(num_particles)
+:num_particles(num_particles)
+,particles(num_particles)
+,log_likelihoods(num_particles)
 ,rng()
 {
     if(num_particles == 0)
@@ -17,8 +19,11 @@ ClassicNestedSampler<ModelType>::
 template<class ModelType>
 void ClassicNestedSampler<ModelType>::initialise_particles()
 {
-    for(auto& particle: particles)
-        particle.from_prior();
+    for(size_t i=0; i<num_particles; ++i)
+    {
+        particles[i].from_prior(rng);
+        log_likelihoods[i] = particles[i].get_log_likelihood();
+    }
 }
 
 } // namespace LiNeS
