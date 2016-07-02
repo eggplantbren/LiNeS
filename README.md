@@ -1,5 +1,5 @@
-LiNeS
-=====
+LiNeS (Linked Nested Sampling)
+==============================
 
 Making Nested Sampling unbiased
 and therefore embarrassingly parallel
