@@ -26,10 +26,15 @@ class ClassicNestedSampler
         *   size_t num_particles = the number of particles
         *   unsigned int seed = random number generator seed
         */
-        ClassicNestedSampler(std::size_t num_particles, unsigned int seed = 0);
+        ClassicNestedSampler(std::size_t num_particles, unsigned int seed=0);
 
         /*
         * Initialise the particles by generating them from the prior.
+        */
+        void initialise_particles();
+
+        /*
+        * 
         */
 };
 
