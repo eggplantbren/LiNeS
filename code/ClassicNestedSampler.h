@@ -49,6 +49,11 @@ class ClassicNestedSampler
         */
         void do_iteration(unsigned int mcmc_steps=10000);
 
+        /*
+        * Estimate -log(X) of the most recent iteration.
+        */
+        double get_depth() const;
+
     private:
         /*
         * Initialise the particles by generating them from the prior.

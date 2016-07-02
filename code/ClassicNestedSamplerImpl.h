@@ -71,6 +71,12 @@ size_t ClassicNestedSampler<ModelType>::find_worst_particle() const
 }
 
 template<class ModelType>
+double ClassicNestedSampler<ModelType>::get_depth() const
+{
+    return iteration*(1.0/num_particles);
+}
+
+template<class ModelType>
 void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
     // Initialise the particles if it hasn't been done already
