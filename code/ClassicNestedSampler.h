@@ -20,9 +20,10 @@ class ClassicNestedSampler
         // The number of particles
         std::size_t num_particles;
 
-        // The particles and their log-likelihoods
+        // The particles, their log-likelihoods, and tiebreakers.
         std::vector<ModelType> particles;
         std::vector<double> log_likelihoods;
+        std::vector<double> tiebreakers;
 
     public:
         /*
@@ -38,8 +39,9 @@ class ClassicNestedSampler
         void initialise_particles();
 
         /*
-        * 
+        * Find the worst (lowest likelihood) particle and returns its index.
         */
+        size_t find_worst_particle() const;
 };
 
 } // namespace LiNeS
