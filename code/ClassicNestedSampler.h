@@ -2,6 +2,7 @@
 #define LiNeS_ClassicNestedSampler
 
 #include <vector>
+#include <stddef.h>
 #include "DNest4/code/RNG.h"
 
 namespace LiNeS
@@ -18,10 +19,13 @@ class ClassicNestedSampler
         DNest4::RNG rng;
 
         // The number of particles
-        std::size_t num_particles;
+        size_t num_particles;
 
         // Iteration counter
         int iteration;
+
+        // Readiness flag
+        bool ready;
 
         // The particles, their log-likelihoods, and tiebreakers.
         std::vector<ModelType> particles;
@@ -34,12 +38,7 @@ class ClassicNestedSampler
         *   size_t num_particles = the number of particles
         *   unsigned int seed = random number generator seed
         */
-        ClassicNestedSampler(std::size_t num_particles, unsigned int seed=0);
-
-        /*
-        * Initialise the particles by generating them from the prior.
-        */
-        void initialise_particles();
+        ClassicNestedSampler(size_t num_particles, unsigned int seed=0);
 
         /*
         * Do an iteration of Nested Sampling.
@@ -47,6 +46,11 @@ class ClassicNestedSampler
         void do_iteration();
 
     private:
+        /*
+        * Initialise the particles by generating them from the prior.
+        */
+        void initialise_particles();
+
         /*
         * Find the worst (lowest likelihood) particle and returns its index.
         */

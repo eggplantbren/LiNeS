@@ -7,16 +7,17 @@ namespace LiNeS
 
 template<class ModelType>
 ClassicNestedSampler<ModelType>::
-    ClassicNestedSampler(std::size_t num_particles, unsigned int seed)
+    ClassicNestedSampler(size_t num_particles, unsigned int seed)
 :rng()
 ,num_particles(num_particles)
-,iteration(-1)  // -1 = not initialised
+,iteration(-1)  // -1 = particles not initialised.
 ,particles(num_particles)
 ,log_likelihoods(num_particles)
 ,tiebreakers(num_particles)
 {
     if(num_particles == 0)
-        throw std::domain_error("ERROR: num_particles can't be zero.");
+        throw std::domain_error("ERROR constructing ClassicNestedSampler:\
+                                            num_particles can't be zero.");
     rng.set_seed(seed);
 }
 
@@ -63,8 +64,12 @@ size_t ClassicNestedSampler<ModelType>::find_worst_particle() const
 template<class ModelType>
 void ClassicNestedSampler<ModelType>::do_iteration()
 {
+    // Initialise the particles if it hasn't been done already
     if(iteration == -1)
         initialise_particles();
+
+    size_t worst = find_worst_particle();
+    
 }
 
 } // namespace LiNeS
