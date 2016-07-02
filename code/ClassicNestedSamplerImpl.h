@@ -1,0 +1,5 @@
+namespace LiNeS
+{
+
+} // namespace LiNeS
+
