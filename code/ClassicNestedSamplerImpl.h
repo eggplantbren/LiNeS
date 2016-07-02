@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <limits>
+#include <iostream>
 
 namespace LiNeS
 {
@@ -21,12 +22,16 @@ ClassicNestedSampler<ModelType>::
 template<class ModelType>
 void ClassicNestedSampler<ModelType>::initialise_particles()
 {
+    std::cout<<"# Generating "<<num_particles<<" particles from the prior...";
+    std::cout<<std::flush;
+
     for(size_t i=0; i<num_particles; ++i)
     {
         particles[i].from_prior(rng);
         log_likelihoods[i] = particles[i].log_likelihood();
         tiebreakers[i] = rng.rand();
     }
+    std::cout<<"done."<<std::endl;
 }
 
 template<class ModelType>
