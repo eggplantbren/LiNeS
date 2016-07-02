@@ -4,8 +4,11 @@ namespace LiNeS
 {
 
 template<class ModelType>
-LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger)
+LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
+                                        unsigned int seed)
 {
+    rng.set_seed(seed);
+
     size_t num_particles = classic_logger.get_num_particles();
     std::vector<double> logl = classic_logger.get_log_likelihoods();
     std::vector<double> tb = classic_logger.get_tiebreakers();
