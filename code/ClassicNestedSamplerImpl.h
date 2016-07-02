@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 namespace LiNeS
 {
 
@@ -7,7 +9,16 @@ ClassicNestedSampler<ModelType>::
 :particles(num_particles)
 ,rng()
 {
+    if(num_particles == 0)
+        throw std::domain_error("ERROR: num_particles can't be zero.");
     rng.set_seed(seed);
+}
+
+template<class ModelType>
+void ClassicNestedSampler<ModelType>::initialise_particles()
+{
+    for(auto& particle: particles)
+        particle.from_prior();
 }
 
 } // namespace LiNeS
