@@ -5,7 +5,7 @@
 int main()
 {
     LiNeS::ClassicNestedSampler<SpikeSlab> sampler(100);
-    sampler.initialise_particles();
+    sampler.do_iteration();
     return 0;
 }
 

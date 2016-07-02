@@ -10,6 +10,7 @@ ClassicNestedSampler<ModelType>::
     ClassicNestedSampler(std::size_t num_particles, unsigned int seed)
 :rng()
 ,num_particles(num_particles)
+,iteration(-1)  // -1 = not initialised
 ,particles(num_particles)
 ,log_likelihoods(num_particles)
 ,tiebreakers(num_particles)
@@ -32,6 +33,9 @@ void ClassicNestedSampler<ModelType>::initialise_particles()
         tiebreakers[i] = rng.rand();
     }
     std::cout<<"done."<<std::endl;
+
+    // Set iteration to zero
+    iteration = 0;
 }
 
 template<class ModelType>
@@ -54,6 +58,13 @@ size_t ClassicNestedSampler<ModelType>::find_worst_particle() const
     }
 
     return which;
+}
+
+template<class ModelType>
+void ClassicNestedSampler<ModelType>::do_iteration()
+{
+    if(iteration == -1)
+        initialise_particles();
 }
 
 } // namespace LiNeS
