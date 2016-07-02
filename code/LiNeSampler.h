@@ -4,11 +4,9 @@
 namespace LiNeS
 {
 
+template <class ModelType>
 class LiNeSampler
 {
-
-
-
 
 
 
@@ -17,6 +15,8 @@ class LiNeSampler
 };
 
 } // namespace LiNeS
+
+#include "LiNeSamplerImpl.h"
 
 #endif
 

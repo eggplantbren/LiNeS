@@ -4,10 +4,11 @@
 
 int main()
 {
+    // Create a classic sampler with 100 particles.
     LiNeS::ClassicNestedSampler<SpikeSlab> sampler(100);
 
-    while(sampler.get_depth() < 100.0)
-        sampler.do_iteration(1000);
+    // Run to 100 nats depth, with 1000 MCMC steps per iteration
+    sampler.run(100.0, 1000);
 
     return 0;
 }

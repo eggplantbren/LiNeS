@@ -45,12 +45,12 @@ class ClassicNestedSampler
         /*
         * Do an iteration of Nested Sampling.
         */
-        void do_iteration(unsigned int mcmc_steps=10000);
+        void do_iteration(unsigned int mcmc_steps=1000);
 
         /*
-        * Estimate -log(X) of the most recent iteration.
+        * Run to a certain depth
         */
-        double get_depth() const;
+        double run(double max_depth, unsigned int mcmc_steps=1000);
 
     private:
         /*
@@ -63,6 +63,10 @@ class ClassicNestedSampler
         */
         size_t find_worst_particle() const;
 
+        /*
+        * Estimate -log(X) of the most recent iteration.
+        */
+        double get_depth() const;
 };
 
 } // namespace LiNeS

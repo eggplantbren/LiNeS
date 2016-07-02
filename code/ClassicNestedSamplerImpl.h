@@ -77,6 +77,16 @@ double ClassicNestedSampler<ModelType>::get_depth() const
 }
 
 template<class ModelType>
+double ClassicNestedSampler<ModelType>::run(double max_depth,
+                                                    unsigned int mcmc_steps)
+{
+    while(get_depth() < max_depth)
+        do_iteration(mcmc_steps);
+    return result_logger.calculate_logZ();
+}
+
+
+template<class ModelType>
 void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
     // Initialise the particles if it hasn't been done already
