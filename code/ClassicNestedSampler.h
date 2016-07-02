@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stddef.h>
+#include <ctime>
 #include "DNest4/code/RNG.h"
 #include "ResultLogger.h"
 
@@ -25,9 +26,6 @@ class ClassicNestedSampler
         // Iteration counter
         int iteration;
 
-        // Readiness flag
-        bool ready;
-
         // The particles, their log-likelihoods, and tiebreakers.
         std::vector<ModelType> particles;
         std::vector<double> log_likelihoods;
@@ -42,7 +40,7 @@ class ClassicNestedSampler
         *   size_t num_particles = the number of particles
         *   unsigned int seed = random number generator seed
         */
-        ClassicNestedSampler(size_t num_particles, unsigned int seed=0);
+        ClassicNestedSampler(size_t num_particles, unsigned int seed=time(0));
 
         /*
         * Do an iteration of Nested Sampling.

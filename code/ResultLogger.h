@@ -31,6 +31,11 @@ class ResultLogger
         *       double tb   = tiebreaker
         */
         void log_particle(double logl, double tb);
+
+        /*
+        * Calculate log(Z)
+        */
+        double calculate_logZ(double temperature=1.0) const;
 };
 
 } // namespace LiNeS

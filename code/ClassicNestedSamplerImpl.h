@@ -91,7 +91,8 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
     std::cout<<std::setprecision(12);
     std::cout<<"# Iteration "<<iteration<<". ";
     std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
-    std::cout<<"log(L) = "<<log_likelihoods[worst]<<". ";
+    std::cout<<"log(L) = "<<log_likelihoods[worst]<<"."<<std::endl;
+    std::cout<<"#    log(Z) = "<<result_logger.calculate_logZ()<<". ";
 
     // Keep threshold
     double logl_threshold = log_likelihoods[worst];
