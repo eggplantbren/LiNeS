@@ -10,7 +10,9 @@ for i in range(0, len(logX)):
     biggest = np.max(temp)
     logX[i] = np.log(np.sum(np.exp(temp - biggest))) + biggest - np.log(len(temp))
 
-plt.plot(logX, logL, "ko")
+good = logX > -1E300
+
+plt.plot(logX[good], logL[good], "ko")
 plt.xlabel("$\\ln(X)$", fontsize=16)
 plt.ylabel("$\\ln(L)$", fontsize=16)
 plt.show()
