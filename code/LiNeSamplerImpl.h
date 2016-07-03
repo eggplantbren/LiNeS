@@ -26,10 +26,31 @@ LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
 }
 
 template<class ModelType>
-void LiNeSampler<ModelType>::do_iteration()
+void LiNeSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
     if(iteration == 0)
         particle.from_prior(rng);
+
+    // Save particles from the MCMC
+    stash.resize(mcmc_steps);
+    logl_stash.resize(mcmc_steps);
+    tb_stash.resize(mcmc_steps);
+
+    ModelType proposal;
+    double logl_proposal, tb_proposal, logH;
+    for(unsigned int i=0; i<mcmc_steps; ++i)
+    {
+        // Do the proposal
+        proposal = particle;
+        logH = particle.perturb(rng);
+
+        if(rng.rand() <= exp(logH))
+        {
+            
+        }
+        stash[i] = particle;
+        
+    }
 
     ++iteration;
 }

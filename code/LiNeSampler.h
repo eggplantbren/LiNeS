@@ -16,6 +16,13 @@ class LiNeSampler
 
         // The single particle
         ModelType particle;
+        double logl_particle;
+        double tb_particle;
+
+        // The particle stash
+        std::vector<ModelType> stash;
+        std::vector<double> logl_stash;
+        std::vector<double> tb_stash;
 
         // The levels
         std::vector<double> levels_log_likelihoods;
@@ -29,7 +36,7 @@ class LiNeSampler
                                                     unsigned int seed=time(0));
 
         // Do an iteration
-        void do_iteration();
+        void do_iteration(unsigned int mcmc_steps=1000);
 
 };
 
