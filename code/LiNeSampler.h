@@ -17,8 +17,12 @@ class LiNeSampler
         // The single particle
         ModelType particle;
 
+        // The levels
         std::vector<double> levels_log_likelihoods;
         std::vector<double> levels_tiebreakers;
+
+        // Iteration counter
+        unsigned int iteration;
 
     public:
         LiNeSampler(const ClassicLogger& classic_logger,

@@ -6,6 +6,7 @@ namespace LiNeS
 template<class ModelType>
 LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
                                         unsigned int seed)
+:iteration(0)
 {
     rng.set_seed(seed);
 
@@ -22,6 +23,15 @@ LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
 
     for(size_t i=0; i<levels_log_likelihoods.size(); ++i)
         std::cout<<i<<' '<<levels_log_likelihoods[i]<<std::endl;
+}
+
+template<class ModelType>
+void LiNeSampler<ModelType>::do_iteration()
+{
+    if(iteration == 0)
+        particle.from_prior(rng);
+
+    ++iteration;
 }
 
 } // namespace LiNeS
