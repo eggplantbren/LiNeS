@@ -16,7 +16,7 @@ LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
     std::vector<double> tb = classic_logger.get_tiebreakers();
 
     // Extract every nth to become a level
-    for(size_t i=1; i<(logl.size()/num_particles); ++i)
+    for(size_t i=1; i<=(logl.size()/num_particles); ++i)
     {
         levels_log_likelihoods.push_back(logl[num_particles*i-1]);
         levels_tiebreakers.push_back(tb[num_particles*i-1]);
@@ -26,7 +26,7 @@ LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
 template<class ModelType>
 void LNS<ModelType>::run(unsigned int mcmc_steps)
 {
-    for(size_t i=0; i<levels_log_likelihoods.size(); ++i)
+    for(size_t i=0; i<(levels_log_likelihoods.size()+1); ++i)
         do_iteration(mcmc_steps);
 }
 
