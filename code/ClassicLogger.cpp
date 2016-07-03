@@ -10,12 +10,14 @@ namespace LiNeS
 
 ClassicLogger::ClassicLogger(size_t num_particles)
 :num_particles(num_particles)
-,fout("classic_log.csv", std::ios::out)
+,fout("classic_log.txt", std::ios::out)
 {
     if(num_particles == 0)
         throw std::domain_error
             ("ERROR constructing ClassicLogger: num_particles can't be zero.");
-    fout<<"logL, tiebreaker"<<std::endl;
+    fout<<"# num_particles = "<<num_particles<<'\n';
+    fout<<"# iteration, logX (deterministic estimate), logL, tiebreaker";
+    fout<<std::endl;
     fout<<std::setprecision(12);
 }
 
@@ -28,7 +30,9 @@ void ClassicLogger::log_particle(double logl, double tb)
 {
     log_likelihoods.push_back(logl);
     tiebreakers.push_back(tb);
-    fout<<logl<<','<<tb<<std::endl;
+    fout<<log_likelihoods.size()<<' ';
+    fout<<(-static_cast<double>(log_likelihoods.size())/num_particles)<<' ';
+    fout<<logl<<' '<<tb<<std::endl;
 }
 
 double ClassicLogger::calculate_logZ(double temperature) const

@@ -3,6 +3,7 @@
 
 #include "DNest4/code/RNG.h"
 #include "ClassicLogger.h"
+#include "LNSLogger.h"
 
 namespace LiNeS
 {
@@ -28,6 +29,9 @@ class LNS
 
         // Compression estimate
         double logX;
+
+        // Logger for results
+        LNSLogger logger;
 
     public:
         LNS(const ClassicLogger& classic_logger,

@@ -63,6 +63,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
         if(count_above == 0)
             return;
         logX += log(count_above) - log(stash.size());
+        logger.log_level(logX);
     }
 
     std::cout<<"# Linked NS Iteration "<<iteration<<". ";
