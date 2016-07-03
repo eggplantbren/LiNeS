@@ -24,6 +24,13 @@ LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
 }
 
 template<class ModelType>
+void LNS<ModelType>::run(unsigned int mcmc_steps)
+{
+    for(size_t i=0; i<levels_log_likelihoods.size(); ++i)
+        do_iteration(mcmc_steps);
+}
+
+template<class ModelType>
 void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
     // Allocate space

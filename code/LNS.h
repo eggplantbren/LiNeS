@@ -33,9 +33,11 @@ class LNS
         LNS(const ClassicLogger& classic_logger,
                                                     unsigned int seed=time(0));
 
+        void run(unsigned int mcmc_steps=1000);
+
+    private:
         // Do an iteration
         void do_iteration(unsigned int mcmc_steps=1000);
-
 };
 
 } // namespace LiNeS

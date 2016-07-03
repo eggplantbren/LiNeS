@@ -35,7 +35,7 @@ double SpikeSlab::log_likelihood() const
 
     for(const double& x: params)
     {
-        logl1 += -0.5*pow((x - 0.0)/u, 2);
+        logl1 += -0.5*pow((x - 0.031)/u, 2);
         logl2 += -0.5*pow(x/v, 2);
     }
     logl1 += log(100.);
