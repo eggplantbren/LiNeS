@@ -1,6 +1,6 @@
 #include <iostream>
 #include "ClassicNestedSampler.h"
-#include "LiNeSampler.h"
+#include "LNS.h"
 #include "Models/SpikeSlab.h"
 
 int main()
@@ -12,7 +12,7 @@ int main()
     sampler.run(100.0, 1000);
 
     // Create a Linked Nested Sampler
-    LiNeS::LiNeSampler<SpikeSlab> lns(sampler.get_logger());
+    LiNeS::LNS<SpikeSlab> lns(sampler.get_logger());
 
     for(int i=0; i<100; ++i)
         lns.do_iteration();

@@ -4,7 +4,7 @@ namespace LiNeS
 {
 
 template<class ModelType>
-LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
+LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
                                         unsigned int seed)
 :iteration(0)
 ,logX(0.0)
@@ -24,7 +24,7 @@ LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
 }
 
 template<class ModelType>
-void LiNeSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
+void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
     // Allocate space
     if(stash.size() != mcmc_steps)

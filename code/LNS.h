@@ -1,5 +1,5 @@
-#ifndef LiNeS_LiNeSampler
-#define LiNeS_LiNeSampler
+#ifndef LiNeS_LNS
+#define LiNeS_LNS
 
 #include "DNest4/code/RNG.h"
 #include "ClassicLogger.h"
@@ -8,7 +8,7 @@ namespace LiNeS
 {
 
 template <class ModelType>
-class LiNeSampler
+class LNS
 {
     private:
         // An RNG to use
@@ -30,7 +30,7 @@ class LiNeSampler
         double logX;
 
     public:
-        LiNeSampler(const ClassicLogger& classic_logger,
+        LNS(const ClassicLogger& classic_logger,
                                                     unsigned int seed=time(0));
 
         // Do an iteration
@@ -40,7 +40,7 @@ class LiNeSampler
 
 } // namespace LiNeS
 
-#include "LiNeSamplerImpl.h"
+#include "LNSImpl.h"
 
 #endif
 
