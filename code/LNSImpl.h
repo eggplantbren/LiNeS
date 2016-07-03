@@ -53,8 +53,10 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
                      tb_stash[i]   == tb_threshold))
                 ++count_above;
         }
+        if(count_above == 0)
+            return;
         logX += log(count_above) - log(stash.size());
-        std::cout<<"Iteration "<<iteration<<". ";
+        std::cout<<"# LNS Iteration "<<iteration<<". ";
         std::cout<<"log(X) = "<<logX<<".\n"<<std::endl;
     }
 
