@@ -18,8 +18,8 @@ LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
     // Extract every nth to become a level
     for(size_t i=1; i<(logl.size()/num_particles); ++i)
     {
-        levels_log_likelihoods.push_back(logl[num_particles*i]);
-        levels_tiebreakers.push_back(tb[num_particles*i]);
+        levels_log_likelihoods.push_back(logl[num_particles*i-1]);
+        levels_tiebreakers.push_back(tb[num_particles*i-1]);
     }
 }
 
@@ -67,7 +67,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
     }
 
     std::cout<<"# Linked NS Iteration "<<iteration<<". ";
-    std::cout<<"log(X) = "<<logX<<".\n";
+    std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
     std::cout<<"    Doing MCMC..."<<std::flush;
 
     unsigned int K;
