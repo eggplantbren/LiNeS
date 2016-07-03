@@ -14,11 +14,6 @@ class LiNeSampler
         // An RNG to use
         DNest4::RNG rng;
 
-        // The single particle
-        ModelType particle;
-        double logl_particle;
-        double tb_particle;
-
         // The particle stash
         std::vector<ModelType> stash;
         std::vector<double> logl_stash;
@@ -30,6 +25,9 @@ class LiNeSampler
 
         // Iteration counter
         unsigned int iteration;
+
+        // Compression estimate
+        double logX;
 
     public:
         LiNeSampler(const ClassicLogger& classic_logger,

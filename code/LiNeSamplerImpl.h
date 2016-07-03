@@ -7,6 +7,7 @@ template<class ModelType>
 LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
                                         unsigned int seed)
 :iteration(0)
+,logX(0.0)
 {
     rng.set_seed(seed);
 
@@ -20,19 +21,17 @@ LiNeSampler<ModelType>::LiNeSampler(const ClassicLogger& classic_logger,
         levels_log_likelihoods.push_back(logl[num_particles*i]);
         levels_tiebreakers.push_back(tb[num_particles*i]);
     }
-
-    for(size_t i=0; i<levels_log_likelihoods.size(); ++i)
-        std::cout<<i<<' '<<levels_log_likelihoods[i]<<std::endl;
 }
 
 template<class ModelType>
 void LiNeSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
-    if(iteration == 0)
+    // Allocate space
+    if(stash.size() != mcmc_steps)
     {
-        particle.from_prior(rng);
-        logl_particle = particle.log_likelihood();
-        tb_particle = rng.rand();
+        stash.resize(mcmc_steps);
+        logl_stash.resize(mcmc_steps);
+        tb_stash.resize(mcmc_steps);
     }
 
     // Set the likelihood threshold
@@ -43,18 +42,48 @@ void LiNeSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
                                 (0.0):
                                 (levels_tiebreakers[iteration-1]);
 
-    // Save particles from the MCMC
-    stash.resize(mcmc_steps);
-    logl_stash.resize(mcmc_steps);
-    tb_stash.resize(mcmc_steps);
+    // Number of particles in the stash that are above the threshold    
+    size_t count_above = 0;
+    if(iteration > 0)
+    {
+        for(size_t i=0; i<stash.size(); ++i)
+        {
+            if(logl_stash[i] > logl_threshold ||
+                    (logl_stash[i] == logl_threshold &&
+                     tb_stash[i]   == tb_threshold))
+                ++count_above;
+        }
+        logX += log(count_above) - log(stash.size());
+        std::cout<<"Iteration "<<iteration<<". ";
+        std::cout<<"log(X) = "<<logX<<".\n"<<std::endl;
+    }
+
+    unsigned int K;
+    if(iteration == 0)
+    {
+        K = rng.rand_int(mcmc_steps);
+        stash[K].from_prior(rng);
+        logl_stash[K] = stash[K].log_likelihood();
+        tb_stash[K] = rng.rand();
+    }
+    else
+    {
+        while(true)
+        {
+            K = rng.rand_int(mcmc_steps);
+            if(logl_stash[K] > logl_threshold ||
+                (logl_stash[K] == logl_threshold &&
+                 tb_stash[K]   == tb_threshold))
+                break;
+        }
+    }
+
+    ModelType particle = stash[K];
+    double logl_particle = logl_stash[K];
+    double tb_particle = tb_stash[K];
 
     ModelType proposal;
     double logl_proposal, tb_proposal, logH;
-
-    unsigned int K = rng.rand_int(mcmc_steps);
-    stash[K] = particle;
-    logl_stash[K] = logl_particle;
-    tb_stash[K] = tb_particle;
 
     // Forwards
     for(unsigned int i=K+1; i<mcmc_steps; ++i)
@@ -80,7 +109,6 @@ void LiNeSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
-        std::cout<<i<<' ';
     }
 
     // Backwards
@@ -110,7 +138,6 @@ void LiNeSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
-        std::cout<<i<<' ';
     }
 
     ++iteration;
