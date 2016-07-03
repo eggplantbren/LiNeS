@@ -34,11 +34,11 @@ template<class ModelType>
 void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
 {
     // Allocate space
-    if(stash.size() != mcmc_steps)
+    if(stash.size() != mcmc_steps+1)
     {
-        stash.resize(mcmc_steps);
-        logl_stash.resize(mcmc_steps);
-        tb_stash.resize(mcmc_steps);
+        stash.resize(mcmc_steps+1);
+        logl_stash.resize(mcmc_steps+1);
+        tb_stash.resize(mcmc_steps+1);
     }
 
     // Set the likelihood threshold
@@ -64,7 +64,8 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
             return;
         logX += log(count_above) - log(stash.size());
         std::cout<<"# LNS Iteration "<<iteration<<". ";
-        std::cout<<"log(X) = "<<logX<<'.'<<std::endl;
+        std::cout<<"log(X) = "<<logX<<'.'<<'\n';
+        std::cout<<"    Doing MCMC..."<<std::flush;
     }
 
     unsigned int K;
@@ -94,9 +95,14 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
     ModelType proposal;
     double logl_proposal, tb_proposal, logH;
 
+    unsigned int tries = 0;
+    unsigned int accepts = 0;
+
     // Forwards
-    for(unsigned int i=K+1; i<mcmc_steps; ++i)
+    for(unsigned int i=K+1; i<stash.size(); ++i)
     {
+        ++tries;
+
         // Do the proposal
         proposal = particle;
         logH = proposal.perturb(rng);
@@ -113,6 +119,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
                 particle = proposal;
                 logl_particle = logl_proposal;
                 tb_particle = tb_proposal;
+                ++accepts;
             }
         }
         stash[i] = particle;
@@ -124,8 +131,11 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
     particle = stash[K];
     logl_particle = logl_stash[K];
     tb_particle = tb_stash[K];
+
     for(int i=K-1; i>=0; --i)
     {
+        ++tries;
+
         // Do the proposal
         proposal = particle;
         logH = proposal.perturb(rng);
@@ -142,12 +152,15 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
                 particle = proposal;
                 logl_particle = logl_proposal;
                 tb_particle = tb_proposal;
+                ++accepts;
             }
         }
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
     }
+
+    std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n"<<std::endl;
 
     ++iteration;
 }
