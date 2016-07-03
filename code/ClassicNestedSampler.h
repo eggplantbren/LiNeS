@@ -53,9 +53,9 @@ class ClassicNestedSampler
         double run(double max_depth, unsigned int mcmc_steps=1000);
 
         /*
-        * Get the logger (returns a copy)
+        * Get the logger (returns a const reference)
         */
-        ClassicLogger get_logger() const
+        const ClassicLogger& get_logger() const
         { return logger; }
 
     private:

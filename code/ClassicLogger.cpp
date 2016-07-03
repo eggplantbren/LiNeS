@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdexcept>
 #include <limits>
+#include <iomanip>
 #include "DNest4/code/Utils.h"
 
 namespace LiNeS
@@ -9,16 +10,25 @@ namespace LiNeS
 
 ClassicLogger::ClassicLogger(size_t num_particles)
 :num_particles(num_particles)
+,fout("classic_log.csv", std::ios::out)
 {
     if(num_particles == 0)
         throw std::domain_error
             ("ERROR constructing ClassicLogger: num_particles can't be zero.");
+    fout<<"logL, tiebreaker"<<std::endl;
+    fout<<std::setprecision(12);
+}
+
+ClassicLogger::~ClassicLogger()
+{
+    fout.close();
 }
 
 void ClassicLogger::log_particle(double logl, double tb)
 {
     log_likelihoods.push_back(logl);
     tiebreakers.push_back(tb);
+    fout<<logl<<','<<tb<<std::endl;
 }
 
 double ClassicLogger::calculate_logZ(double temperature) const

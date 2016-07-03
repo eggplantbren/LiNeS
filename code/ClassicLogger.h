@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stddef.h>
+#include <fstream>
 
 namespace LiNeS
 {
@@ -17,12 +18,20 @@ class ClassicLogger
         std::vector<double> log_likelihoods;
         std::vector<double> tiebreakers;
 
+        // Output file stream
+        std::fstream fout;
+
     public:
         /*
         * Constructor arguments:
         *       size_t num_particles - number of particles in the run
         */
         ClassicLogger(size_t num_particles);
+
+        /*
+        * Destructor (closes fstream)
+        */
+        ~ClassicLogger();
 
         /*
         * log a particle
