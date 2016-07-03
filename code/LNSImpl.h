@@ -21,6 +21,7 @@ LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
         levels_log_likelihoods.push_back(logl[num_particles*i-1]);
         levels_tiebreakers.push_back(tb[num_particles*i-1]);
     }
+    std::cout<<std::setprecision(8);
 }
 
 template<class ModelType>
@@ -60,15 +61,24 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
                      tb_stash[i]   == tb_threshold))
                 ++count_above;
         }
+
         if(count_above == 0)
-            return;
-        logX += log(count_above) - log(stash.size());
+            logX = -std::numeric_limits<double>::max();
+        else
+            logX += log(count_above) - log(stash.size());
         logger.log_level(logX);
     }
 
     std::cout<<"# Linked NS Iteration "<<iteration<<". ";
     std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
-    std::cout<<"    Doing MCMC..."<<std::flush;
+    if(logX == -std::numeric_limits<double>::max())
+    {
+        std::cout<<"#    Not doing MCMC.\n#"<<std::endl;
+        ++iteration;
+        return;
+    }
+
+    std::cout<<"#    Doing MCMC..."<<std::flush;
 
     unsigned int K;
     if(iteration == 0)
@@ -162,7 +172,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
         tb_stash[i] = tb_particle;
     }
 
-    std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n"<<std::endl;
+    std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;
 
     ++iteration;
 }
