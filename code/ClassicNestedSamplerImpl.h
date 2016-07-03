@@ -99,7 +99,7 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
     logger.log_particle(log_likelihoods[worst], tiebreakers[worst]);
 
     std::cout<<std::setprecision(12);
-    std::cout<<"# Iteration "<<iteration<<". ";
+    std::cout<<"# Classic NS iteration "<<iteration<<". ";
     std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
     std::cout<<"log(L) = "<<log_likelihoods[worst]<<".\n";
     std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";

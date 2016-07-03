@@ -57,7 +57,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
             return;
         logX += log(count_above) - log(stash.size());
         std::cout<<"# LNS Iteration "<<iteration<<". ";
-        std::cout<<"log(X) = "<<logX<<".\n"<<std::endl;
+        std::cout<<"log(X) = "<<logX<<'.'<<std::endl;
     }
 
     unsigned int K;
