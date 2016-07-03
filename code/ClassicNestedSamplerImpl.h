@@ -101,7 +101,7 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
     std::cout<<std::setprecision(12);
     std::cout<<"# Iteration "<<iteration<<". ";
     std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
-    std::cout<<"log(L) = "<<log_likelihoods[worst]<<"."<<std::endl;
+    std::cout<<"log(L) = "<<log_likelihoods[worst]<<".\n";
     std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";
 
     // Keep threshold
@@ -153,8 +153,8 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
         }
     }
 
-    std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<"."<<std::endl;
-    std::cout<<"#\n";
+    std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<".\n";
+    std::cout<<'#'<<std::endl;
 }
 
 } // namespace LiNeS
