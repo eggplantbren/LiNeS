@@ -37,7 +37,12 @@ class LNS
         LNS(const ClassicLogger& classic_logger,
                                                     unsigned int seed=time(0));
 
+        // Run LNS
         void run(unsigned int mcmc_steps=1000);
+
+        // Getter
+        const LNSLogger& get_logger() const
+        { return logger; }
 
     private:
         // Do an iteration

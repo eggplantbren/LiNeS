@@ -66,7 +66,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
             logX = -std::numeric_limits<double>::max();
         else
             logX += log(count_above) - log(stash.size());
-        logger.log_level(logX);
+        logger.log_level(logX, logl_threshold);
     }
 
     std::cout<<"# Linked NS Iteration "<<iteration<<". ";
