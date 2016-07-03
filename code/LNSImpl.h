@@ -25,21 +25,21 @@ LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
 }
 
 template<class ModelType>
-void LNS<ModelType>::run(unsigned int mcmc_steps)
+void LNS<ModelType>::run(unsigned int mcmc_steps, unsigned int thin)
 {
     for(size_t i=0; i<(levels_log_likelihoods.size()+1); ++i)
-        do_iteration(mcmc_steps);
+        do_iteration(mcmc_steps, thin);
 }
 
 template<class ModelType>
-void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
+void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
 {
     // Allocate space
-    if(stash.size() != mcmc_steps+1)
+    if(stash.size() != mcmc_steps/thin+1)
     {
-        stash.resize(mcmc_steps+1);
-        logl_stash.resize(mcmc_steps+1);
-        tb_stash.resize(mcmc_steps+1);
+        stash.resize(mcmc_steps/thin+1);
+        logl_stash.resize(mcmc_steps/thin+1);
+        tb_stash.resize(mcmc_steps/thin+1);
     }
 
     // Set the likelihood threshold
@@ -83,7 +83,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
     unsigned int K;
     if(iteration == 0)
     {
-        K = rng.rand_int(mcmc_steps);
+        K = rng.rand_int(mcmc_steps/thin);
         stash[K].from_prior(rng);
         logl_stash[K] = stash[K].log_likelihood();
         tb_stash[K] = rng.rand();
@@ -92,7 +92,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
     {
         while(true)
         {
-            K = rng.rand_int(mcmc_steps);
+            K = rng.rand_int(mcmc_steps/thin);
             if(logl_stash[K] > logl_threshold ||
                 (logl_stash[K] == logl_threshold &&
                  tb_stash[K]   == tb_threshold))
@@ -113,27 +113,31 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
     // Forwards
     for(unsigned int i=K+1; i<stash.size(); ++i)
     {
-        ++tries;
-
-        // Do the proposal
-        proposal = particle;
-        logH = proposal.perturb(rng);
-        logl_proposal = proposal.log_likelihood();
-        tb_proposal = tb_particle + rng.randh();
-        DNest4::wrap(tb_proposal, 0.0, 1.0);
-
-        if(rng.rand() <= exp(logH))
+        for(unsigned int j=0; j<thin; ++j)
         {
-            if(logl_proposal > logl_threshold ||
-                (logl_proposal == logl_threshold &&
-                 tb_proposal   == tb_threshold))
+            ++tries;
+
+            // Do the proposal
+            proposal = particle;
+            logH = proposal.perturb(rng);
+            logl_proposal = proposal.log_likelihood();
+            tb_proposal = tb_particle + rng.randh();
+            DNest4::wrap(tb_proposal, 0.0, 1.0);
+
+            if(rng.rand() <= exp(logH))
             {
-                particle = proposal;
-                logl_particle = logl_proposal;
-                tb_particle = tb_proposal;
-                ++accepts;
+                if(logl_proposal > logl_threshold ||
+                    (logl_proposal == logl_threshold &&
+                     tb_proposal   == tb_threshold))
+                {
+                    particle = proposal;
+                    logl_particle = logl_proposal;
+                    tb_particle = tb_proposal;
+                    ++accepts;
+                }
             }
         }
+
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
@@ -146,27 +150,31 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps)
 
     for(int i=K-1; i>=0; --i)
     {
-        ++tries;
-
-        // Do the proposal
-        proposal = particle;
-        logH = proposal.perturb(rng);
-        logl_proposal = proposal.log_likelihood();
-        tb_proposal = tb_particle + rng.randh();
-        DNest4::wrap(tb_proposal, 0.0, 1.0);
-
-        if(rng.rand() <= exp(logH))
+        for(unsigned int j=0; j<thin; ++j)
         {
-            if(logl_proposal > logl_threshold ||
-                (logl_proposal == logl_threshold &&
-                 tb_proposal   == tb_threshold))
+            ++tries;
+
+            // Do the proposal
+            proposal = particle;
+            logH = proposal.perturb(rng);
+            logl_proposal = proposal.log_likelihood();
+            tb_proposal = tb_particle + rng.randh();
+            DNest4::wrap(tb_proposal, 0.0, 1.0);
+
+            if(rng.rand() <= exp(logH))
             {
-                particle = proposal;
-                logl_particle = logl_proposal;
-                tb_particle = tb_proposal;
-                ++accepts;
+                if(logl_proposal > logl_threshold ||
+                    (logl_proposal == logl_threshold &&
+                     tb_proposal   == tb_threshold))
+                {
+                    particle = proposal;
+                    logl_particle = logl_proposal;
+                    tb_particle = tb_proposal;
+                    ++accepts;
+                }
             }
         }
+
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;

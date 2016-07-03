@@ -38,7 +38,7 @@ class LNS
                                                     unsigned int seed=time(0));
 
         // Run LNS
-        void run(unsigned int mcmc_steps=1000);
+        void run(unsigned int mcmc_steps=1000, unsigned int thin=1);
 
         // Getter
         const LNSLogger& get_logger() const
@@ -46,7 +46,7 @@ class LNS
 
     private:
         // Do an iteration
-        void do_iteration(unsigned int mcmc_steps=1000);
+        void do_iteration(unsigned int mcmc_steps, unsigned int thin);
 };
 
 } // namespace LiNeS
