@@ -73,7 +73,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
     std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
     if(logX == -std::numeric_limits<double>::max())
     {
-        std::cout<<"#    Not doing MCMC.\n#"<<std::endl;
+        std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
         ++iteration;
         return;
     }
