@@ -19,6 +19,6 @@ plt.xlabel("$\\ln(X)$", fontsize=16)
 plt.ylabel("$\\ln(L)$", fontsize=16)
 plt.show()
 
-## Load the particles
-#lns_particles = dn4.my_loadtxt("lns_particles.txt")
+# Load the particles
+particles_info = dn4.my_loadtxt("particles_info.txt")
 

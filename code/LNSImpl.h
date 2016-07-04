@@ -4,9 +4,10 @@ namespace LiNeS
 {
 
 template<class ModelType>
-LNS<ModelType>::LNS(const ClassicLogger& classic_logger,
+LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
                                         unsigned int seed)
-:iteration(0)
+:run_id(run_id)
+,iteration(0)
 ,logX(0.0)
 {
     rng.set_seed(seed);
@@ -50,7 +51,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
                                 (0.0):
                                 (levels_tiebreakers[iteration-1]);
 
-    // Number of particles in the stash that are above the threshold    
+    // Count number of particles in the stash that are above the threshold    
     size_t count_above = 0;
     if(iteration > 0)
     {
@@ -61,7 +62,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
                      tb_stash[i]   == tb_threshold))
                 ++count_above;
             else
-                logger.log_particle(iteration-1, logl_stash[i]);
+                logger.log_particle(run_id, iteration-1, logl_stash[i]);
         }
 
         if(count_above == 0)

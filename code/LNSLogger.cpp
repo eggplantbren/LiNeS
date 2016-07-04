@@ -16,8 +16,9 @@ void LNSLogger::log_level(double logX, double logL)
     levels_logL.push_back(logL);
 }
 
-void LNSLogger::log_particle(size_t level_id, double logL)
+void LNSLogger::log_particle(unsigned int run_id, size_t level_id, double logL)
 {
+    particles_run_id.push_back(run_id);
     particles_level_id.push_back(level_id);
     particles_logL.push_back(logL);
 }
@@ -54,7 +55,10 @@ void LNSLogger::save(bool append) const
         fout.open("particles_info.txt", std::ios::out);
     fout<<std::setprecision(12);
     for(size_t i=0; i<particles_level_id.size(); ++i)
-        fout<<particles_level_id[i]<<' '<<particles_logL[i]<<'\n';
+    {
+        fout<<particles_run_id[i]<<' '<<particles_level_id[i]<<' ';
+        fout<<particles_logL[i]<<'\n';
+    }
     fout.close();
 }
 

@@ -18,6 +18,7 @@ class LNSLogger
         std::vector<double> levels_logL;
 
         // Info about particles
+        std::vector<unsigned int> particles_run_id;
         std::vector<size_t> particles_level_id;
         std::vector<double> particles_logL;
 
@@ -27,7 +28,7 @@ class LNSLogger
 
         // Add to the log
         void log_level(double logX, double logL);
-        void log_particle(size_t level_id, double logL);
+        void log_particle(unsigned int run_id, size_t level_id, double logL);
 
         // Save the log
         void save(bool append=false) const;

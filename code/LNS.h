@@ -12,6 +12,9 @@ template <class ModelType>
 class LNS
 {
     private:
+        // An identity for the run
+        unsigned int run_id;
+
         // An RNG to use
         DNest4::RNG rng;
 
@@ -34,7 +37,7 @@ class LNS
         LNSLogger logger;
 
     public:
-        LNS(const ClassicLogger& classic_logger,
+        LNS(unsigned int run_id, const ClassicLogger& classic_logger,
                                                     unsigned int seed=time(0));
 
         // Run LNS
