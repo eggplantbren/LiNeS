@@ -60,12 +60,15 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
                     (logl_stash[i] == logl_threshold &&
                      tb_stash[i]   == tb_threshold))
                 ++count_above;
+            else
+                logger.log_particle(iteration-1, logl_stash[i]);
         }
 
         if(count_above == 0)
             logX = -std::numeric_limits<double>::max();
         else
             logX += log(count_above) - log(stash.size());
+
         logger.log_level(logX, logl_threshold);
     }
 
