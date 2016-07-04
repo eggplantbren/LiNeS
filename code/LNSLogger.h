@@ -30,8 +30,7 @@ class LNSLogger
         void log_particle(size_t level_id, double logL);
 
         // Save the log
-        void save(const char* levels_filename,
-                    const char* particles_filename, bool append=false) const;
+        void save(bool append=false) const;
 };
 
 } // namespace LiNeS

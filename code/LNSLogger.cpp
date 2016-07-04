@@ -22,23 +22,26 @@ void LNSLogger::log_particle(size_t level_id, double logL)
     particles_logL.push_back(logL);
 }
 
-void LNSLogger::save(const char* levels_filename,
-                        const char* particles_filename, bool append) const
+void LNSLogger::save(bool append) const
 {
     std::fstream fout;
 
-    // Save the levels
-    if(append)
-        fout.open(levels_filename, std::ios::out | std::ios::app);
-    else
-        fout.open(levels_filename, std::ios::out);
-
-    fout<<std::setprecision(12);
+    // Save the levels' log-likelihoods
     if(!append)
+    {
+        fout.open("levels_logL.txt", std::ios::out);
+        fout<<std::setprecision(12);
         for(size_t i=0; i<levels_logL.size(); ++i)
            fout<<levels_logL[i]<<' ';
-    fout<<std::endl;
+        fout<<std::endl;
+        fout.close();
+    }
 
+    // Save the logX estimates
+    if(append)
+        fout.open("levels_logX.txt", std::ios::out | std::ios::app);
+    else
+        fout.open("levels_logX.txt", std::ios::out);
     for(size_t i=0; i<levels_logX.size(); ++i)
         fout<<levels_logX[i]<<' ';
     fout<<std::endl;
@@ -46,13 +49,13 @@ void LNSLogger::save(const char* levels_filename,
 
     // Save the particles
     if(append)
-        fout.open(particles_filename, std::ios::out | std::ios::app);
+        fout.open("particles_info.txt", std::ios::out | std::ios::app);
     else
-        fout.open(particles_filename, std::ios::out);
-
+        fout.open("particles_info.txt", std::ios::out);
     fout<<std::setprecision(12);
     for(size_t i=0; i<particles_level_id.size(); ++i)
         fout<<particles_level_id[i]<<' '<<particles_logL[i]<<'\n';
+    fout.close();
 }
 
 } // namespace LiNeS

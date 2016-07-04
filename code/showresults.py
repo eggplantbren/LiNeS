@@ -1,19 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import dnest4.classic as dn4
 
 # Load and plot the levels
-lns_log = np.loadtxt("lns_levels.txt")
+levels_logL = dn4.my_loadtxt("levels_logL.txt").flatten()
+levels_logX = dn4.my_loadtxt("levels_logX.txt")
 
-logL = lns_log[0, :]
-logX = np.empty(lns_log.shape[1])
-for i in range(0, len(logX)):
-    temp = lns_log[1:,i]
-    biggest = np.max(temp)
-    logX[i] = np.log(np.sum(np.exp(temp - biggest))) + biggest - np.log(len(temp))
-good = logX > -1E300
+num_runs, num_levels = levels_logX.shape
 
-plt.plot(logX[good], logL[good], "ko")
+# Loop over levels and average the X estimates
+logX = np.empty(num_levels)
+for i in range(0, num_levels):
+    logX[i] = dn4.logsumexp(levels_logX[:, i]) - np.log(num_runs)
+good = (logX > -1E300)
+
+plt.plot(logX[good], levels_logL[good], "ko")
 plt.xlabel("$\\ln(X)$", fontsize=16)
 plt.ylabel("$\\ln(L)$", fontsize=16)
 plt.show()
+
+## Load the particles
+#lns_particles = dn4.my_loadtxt("lns_particles.txt")
 

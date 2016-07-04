@@ -15,8 +15,12 @@ int main()
     {
         // Create a Linked Nested Sampler
         LiNeS::LNS<SpikeSlab> lns(sampler.get_logger());
+
+        // Run it
         lns.run(10000, 10);
-        lns.get_logger().save("lns_levels.txt", "lns_particles.txt", i>0);
+
+        // Save it
+        lns.get_logger().save(i > 0);
     }
 
     return 0;
