@@ -99,7 +99,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
             K = rng.rand_int(mcmc_steps/thin);
             if(logl_stash[K] > logl_threshold ||
                 (logl_stash[K] == logl_threshold &&
-                 tb_stash[K] > tb_threshold))
+                 tb_stash[K] >= tb_threshold))
                 break;
         }
     }
