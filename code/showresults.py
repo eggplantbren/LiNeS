@@ -37,10 +37,10 @@ print("log(Z) =", logZ)
 logP = logp - logZ
 
 plt.figure(1)
-plt.plot(logX[good], levels_logL[good], "ko")
+plt.plot(logX[good], levels_logL[good], "ko-")
 plt.xlabel("$\\ln(X)$", fontsize=16)
 plt.ylabel("$\\ln(L)$", fontsize=16)
-plt.show()
+plt.title("Levels")
 
 plt.figure(2)
 plt.plot(np.exp(logP)[logp > -1E300], "k-")
