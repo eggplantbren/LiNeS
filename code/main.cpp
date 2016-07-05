@@ -11,7 +11,7 @@ int main()
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
     sampler.run(100.0, 1000);
 
-    for(int i=0; i<1000; ++i)
+    for(int i=0; i<1000000; ++i)
     {
         // Create a Linked Nested Sampler
         LiNeS::LNS<SpikeSlab> lns(i, sampler.get_logger());
