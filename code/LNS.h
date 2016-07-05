@@ -37,6 +37,11 @@ class LNS
         LNSLogger logger;
 
     public:
+        /* Load levels from a DNest4 levels.txt file! */
+        LNS(unsigned int run_id, const char* levels_file,
+                                                    unsigned int seed=time(0));
+
+        /* Get levels from a ClassicLogger. */
         LNS(unsigned int run_id, const ClassicLogger& classic_logger,
                                                     unsigned int seed=time(0));
 
