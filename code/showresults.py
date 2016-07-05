@@ -14,11 +14,6 @@ for i in range(0, num_levels):
     logX[i] = dn4.logsumexp(levels_logX[:, i]) - np.log(num_runs)
 good = (logX > -1E300)
 
-plt.plot(logX[good], levels_logL[good], "ko")
-plt.xlabel("$\\ln(X)$", fontsize=16)
-plt.ylabel("$\\ln(L)$", fontsize=16)
-plt.show()
-
 # Load the particles
 particles_info = dn4.my_loadtxt("particles_info.txt")
 run_id = particles_info[:,0].astype("int64")
@@ -38,9 +33,16 @@ logw -= dn4.logsumexp(logw)
 
 logp = logw + logL
 logZ = dn4.logsumexp(logp)
-print(logZ)
+print("log(Z) =", logZ)
 logP = logp - logZ
 
+plt.figure(1)
+plt.plot(logX[good], levels_logL[good], "ko")
+plt.xlabel("$\\ln(X)$", fontsize=16)
+plt.ylabel("$\\ln(L)$", fontsize=16)
+plt.show()
+
+plt.figure(2)
 plt.plot(np.exp(logP)[logp > -1E300], "k-")
 plt.xlabel("Particle")
 plt.ylabel("Posterior weight")
