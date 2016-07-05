@@ -17,7 +17,7 @@ int main()
         LiNeS::LNS<SpikeSlab> lns(i, sampler.get_logger());
 
         // Run it
-        lns.run(10000, 10);
+        lns.run(100000, 100);
 
         // Save it
         lns.get_logger().save(i > 0);
