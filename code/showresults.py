@@ -26,19 +26,14 @@ level_id = particles_info[:,1].astype("int64")
 
 # Prior weights
 logw = np.empty(particles_info.shape[0])
+for i in range(0, particles_info.shape[0]):
+    logw[i] = levels_logX[run_id[i], level_id[i]]
+logw -= dn4.logsumexp(logw)
 
-# Loop over runs
-for i in range(0, np.max(run_id) + 1):
-    # Find particles from this run
-    which = (run_id == i)
-    _particles_info = particles_info[which, :]
-    logw[which] = levels_logX[level_id[which]]
-
-logw = logw - dn4.logsumexp(logw)
 logp = logw + particles_info[:,2]
 logZ = dn4.logsumexp(logp)
 print(logZ)
 
-plt.plot(np.exp(logp - logZ), "k")
+plt.plot(logp[logp > -1E300], "k")
 plt.show()
 
