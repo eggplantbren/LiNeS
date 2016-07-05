@@ -61,7 +61,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
                     (logl_stash[i] == logl_threshold &&
                      tb_stash[i] > tb_threshold))
                 ++count_above;
-            else if(rng.rand() <= 1.0/stash.size())
+            else if(rng.rand() <= exp(1.0)/stash.size())
                 logger.log_particle(run_id, iteration-1, logl_stash[i]);
         }
 
