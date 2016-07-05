@@ -6,10 +6,10 @@
 int main()
 {
     // Create a classic sampler with 100 particles.
-    LiNeS::ClassicNestedSampler<SpikeSlab> sampler(100);
+    LiNeS::ClassicNestedSampler<SpikeSlab> sampler(1000);
 
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
-    sampler.run(100.0, 1000);
+    sampler.run(100.0, 500);
 
     for(int i=0; i<1000000; ++i)
     {
@@ -17,7 +17,7 @@ int main()
         LiNeS::LNS<SpikeSlab> lns(i, sampler.get_logger());
 
         // Run it
-        lns.run(100000, 100);
+        lns.run(100000, 10);
 
         // Save it
         lns.get_logger().save(i > 0);
