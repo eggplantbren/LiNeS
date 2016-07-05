@@ -1,7 +1,37 @@
-#include <iostream>
+#include <fstream>
 
 namespace LiNeS
 {
+
+template<class ModelType>
+LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
+                                                            unsigned int seed)
+:run_id(run_id)
+,iteration(0)
+,logX(0.0)
+{
+    rng.set_seed(seed);
+
+    // Open the levels file
+    std::fstream fin(levels_file, std::ios::in);
+
+    // Skip comments at the top of file
+    while(fin.peek() == '#')
+        fin.ignore(1000000, '\n');
+
+    // Skip the zero level
+    fin.ignore(1000000, '\n');
+    double temp1, temp2, temp3;
+    while(fin>>temp1 && fin>>temp2 && fin>>temp3)
+    {
+        levels_log_likelihoods.push_back(temp2);
+        levels_tiebreakers.push_back(temp3);
+        fin.ignore(1000000, '\n');
+    }
+    fin.close();
+
+    std::cout<<std::setprecision(8);
+}
 
 template<class ModelType>
 LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
