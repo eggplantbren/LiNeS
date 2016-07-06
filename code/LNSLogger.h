@@ -1,6 +1,7 @@
 #ifndef LiNeS_LNSLogger
 #define LiNeS_LNSLogger
 
+#include <fstream>
 #include <vector>
 #include <stdlib.h>
 
@@ -36,9 +37,24 @@ class LNSLogger
         void log_particle_info(unsigned int run_id, size_t level_id,
                                                                   double logL);
 
+        // Save a particle to disk
+        template<class ModelType>
+        void save_particle(const ModelType& particle) const;
+
         // Clear output files
         static void clear_output_files();
 };
+
+
+/* Implement the template function */
+template<class ModelType>
+void LNSLogger::save_particle(const ModelType& particle) const
+{
+    std::fstream fout("particles.txt", std::ios::out | std::ios::app);
+    particle.print(fout);
+    fout<<std::endl;    
+    fout.close();
+}
 
 } // namespace LiNeS
 
