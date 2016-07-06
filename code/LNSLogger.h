@@ -26,6 +26,9 @@ class LNSLogger
         // Constructor (all the vectors start with size 0)
         LNSLogger();
 
+        // Destructor (saves logX to file)
+        ~LNSLogger();
+
         // Add to the log
         void log_level(double logX, double logL);
 

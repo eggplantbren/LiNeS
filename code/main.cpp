@@ -10,7 +10,7 @@ int main()
     LiNeS::clear_all_output_files();
 
     // Create a classic sampler with 100 particles.
-    LiNeS::ClassicNestedSampler<SpikeSlab> sampler(1000);
+    LiNeS::ClassicNestedSampler<SpikeSlab> sampler(100);
 
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
     sampler.run(100.0, 500);

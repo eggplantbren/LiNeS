@@ -31,6 +31,13 @@ LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
     fin.close();
 
     std::cout<<std::setprecision(8);
+
+    std::fstream fout;
+    fout.open("levels_logL.txt", std::ios::out);
+    fout<<std::setprecision(12);
+    for(auto logl: levels_log_likelihoods)
+        fout<<logl<<' ';
+    fout.close();
 }
 
 template<class ModelType>
@@ -53,6 +60,13 @@ LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
         levels_tiebreakers.push_back(tb[num_particles*i-1]);
     }
     std::cout<<std::setprecision(8);
+
+    std::fstream fout;
+    fout.open("levels_logL.txt", std::ios::out);
+    fout<<std::setprecision(12);
+    for(auto logl: levels_log_likelihoods)
+        fout<<logl<<' ';
+    fout.close();
 }
 
 template<class ModelType>
