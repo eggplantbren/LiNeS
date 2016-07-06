@@ -1,6 +1,8 @@
 #include "LNSLogger.h"
 #include <fstream>
 #include <iomanip>
+#include <string>
+#include <vector>
 
 namespace LiNeS
 {
@@ -60,6 +62,19 @@ void LNSLogger::save(bool append) const
         fout<<particles_logL[i]<<'\n';
     }
     fout.close();
+}
+
+void LNSLogger::clear_output_files()
+{
+    std::vector<std::string> filenames{"levels_logL.txt",
+                                       "levels_logX.txt",
+                                       "particles_info.txt"};
+
+    for(const auto& filename: filenames)
+    {
+        std::fstream fout(filename, std::ios::out);
+        fout.close();
+    }
 }
 
 } // namespace LiNeS

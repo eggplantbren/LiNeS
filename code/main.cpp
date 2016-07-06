@@ -11,6 +11,9 @@ int main()
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
     sampler.run(100.0, 500);
 
+    // Clear previous output files (well, LNS ones anyway)
+    LNSLogger::clear_output_files();
+
     for(int i=0; i<1000000; ++i)
     {
         // Create a Linked Nested Sampler

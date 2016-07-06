@@ -32,6 +32,9 @@ class LNSLogger
 
         // Save the log
         void save(bool append=false) const;
+
+        // Clear output files
+        static void clear_output_files();
 };
 
 } // namespace LiNeS
