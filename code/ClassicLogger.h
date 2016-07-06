@@ -55,6 +55,9 @@ class ClassicLogger
         { return log_likelihoods; }
         std::vector<double> get_tiebreakers() const
         { return tiebreakers; }
+
+        // Clear output files
+        static void clear_output_files();
 };
 
 } // namespace LiNeS

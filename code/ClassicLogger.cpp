@@ -51,5 +51,16 @@ double ClassicLogger::calculate_logZ(double temperature) const
     return DNest4::logsumexp(logp) - DNest4::logsumexp(logX);
 }
 
+void ClassicLogger::clear_output_files()
+{
+    std::vector<std::string> filenames{"classic_log.txt"};
+
+    for(const auto& filename: filenames)
+    {
+        std::fstream fout(filename, std::ios::out);
+        fout.close();
+    }
+}
+
 } // namespace LiNeS
 
