@@ -33,7 +33,8 @@ class LNSLogger
         void log_level(double logX, double logL);
 
         // Log particle info
-        void log_particle(unsigned int run_id, size_t level_id, double logL);
+        void log_particle_info(unsigned int run_id, size_t level_id,
+                                                                  double logL);
 
         // Clear output files
         static void clear_output_files();

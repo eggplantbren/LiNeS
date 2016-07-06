@@ -31,7 +31,8 @@ void LNSLogger::log_level(double logX, double logL)
     levels_logL.push_back(logL);
 }
 
-void LNSLogger::log_particle(unsigned int run_id, size_t level_id, double logL)
+void LNSLogger::log_particle_info(unsigned int run_id, size_t level_id,
+                                                            double logL)
 {
     particles_run_id.push_back(run_id);
     particles_level_id.push_back(level_id);
