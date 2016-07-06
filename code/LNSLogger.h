@@ -28,10 +28,9 @@ class LNSLogger
 
         // Add to the log
         void log_level(double logX, double logL);
-        void log_particle(unsigned int run_id, size_t level_id, double logL);
 
-        // Save the log
-        void save(bool append=false) const;
+        // Log particle info
+        void log_particle(unsigned int run_id, size_t level_id, double logL);
 
         // Clear output files
         static void clear_output_files();

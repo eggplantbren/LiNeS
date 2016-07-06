@@ -22,9 +22,6 @@ int main()
 
         // Run it
         lns.run(100000, 10);
-
-        // Save it
-        lns.get_logger().save(i > 0);
     }
 
     return 0;
