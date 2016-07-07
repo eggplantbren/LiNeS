@@ -5,13 +5,12 @@ namespace LiNeS
 
 template<class ModelType>
 LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
-                                                            unsigned int seed)
+                                         DNest4::RNG rng)
 :run_id(run_id)
+,rng(rng)
 ,iteration(0)
 ,logX(0.0)
 {
-    rng.set_seed(seed);
-
     // Open the levels file
     std::fstream fin(levels_file, std::ios::in);
 
@@ -42,13 +41,12 @@ LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
 
 template<class ModelType>
 LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
-                                        unsigned int seed)
+                    DNest4::RNG rng)
 :run_id(run_id)
+,rng(rng)
 ,iteration(0)
 ,logX(0.0)
 {
-    rng.set_seed(seed);
-
     size_t num_particles = classic_logger.get_num_particles();
     std::vector<double> logl = classic_logger.get_log_likelihoods();
     std::vector<double> tb = classic_logger.get_tiebreakers();

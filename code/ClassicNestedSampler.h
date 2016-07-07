@@ -58,6 +58,10 @@ class ClassicNestedSampler
         const ClassicLogger& get_logger() const
         { return logger; }
 
+        /* Get a copy of the Random Number Generator */
+        DNest4::RNG get_rng() const
+        { return rng; }
+
     private:
         /*
         * Initialise the particles by generating them from the prior.

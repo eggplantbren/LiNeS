@@ -39,11 +39,11 @@ class LNS
     public:
         /* Load levels from a DNest4 levels.txt file! */
         LNS(unsigned int run_id, const char* levels_file,
-                                                    unsigned int seed=time(0));
+                                        DNest4::RNG rng=DNest4::RNG());
 
         /* Get levels from a ClassicLogger. */
         LNS(unsigned int run_id, const ClassicLogger& classic_logger,
-                                                    unsigned int seed=time(0));
+                                        DNest4::RNG rng=DNest4::RNG());
 
         // Run LNS
         void run(unsigned int mcmc_steps=1000, unsigned int thin=1);
@@ -51,6 +51,10 @@ class LNS
         // Getter
         const LNSLogger& get_logger() const
         { return logger; }
+
+        // Return a copy of the RNG
+        DNest4::RNG get_rng() const
+        { return rng; }
 
     private:
         // Do an iteration
