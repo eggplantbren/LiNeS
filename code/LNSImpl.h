@@ -97,6 +97,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
 
     // Count number of particles in the stash that are above the threshold    
     size_t count_above = 0;
+    std::vector<bool> above(stash.size(), false);
     if(iteration > 0)
     {
         for(size_t i=0; i<stash.size(); ++i)
@@ -104,8 +105,16 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
             if(logl_stash[i] > logl_threshold ||
                     (logl_stash[i] == logl_threshold &&
                      tb_stash[i] > tb_threshold))
+            {
+                above[i] = true;
                 ++count_above;
-            else if(rng.rand() <= exp(1.0)/stash.size())
+            }
+        }
+        size_t count_below = stash.size() - count_above;
+
+        for(size_t i=0; i<stash.size(); ++i)
+        {
+            if(!above[i] && rng.rand() <= 1.0/count_below)
             {
                 logger.log_particle_info(run_id, iteration-1, logl_stash[i]);
                 logger.save_particle(stash[i]);
