@@ -34,10 +34,14 @@ def postprocess(plot=True, verbose=True):
 
     logp = logw + logL
     logZ = dn4.logsumexp(logp)
+    logP = logp - logZ
+    H = np.sum(np.exp(logP)*(logP - logw))
+    ESS = int(np.exp(-np.sum(np.exp(logP)*logP)))
 
     if verbose:
-        print("log(Z) =", logZ)
-    logP = logp - logZ
+        print("ln(Z) =", logZ)
+        print("H =", H, "nats")
+        print("Effective sample size =", ESS)
 
     if plot:
         plt.figure(1)
