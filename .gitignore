@@ -9,3 +9,7 @@ code/levels_logX.txt
 code/particles_info.txt
 code/particles.txt
 __pycache__
+doc/ms.aux
+doc/ms.log
+doc/ms.pdf
+

@@ -1,0 +1,37 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{amsmath}
+\usepackage{dsfont}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[left=2cm, right=2cm, bottom=3cm, top=2cm]{geometry}
+\usepackage{natbib}
+\usepackage{microtype}
+
+\title{LiNeS: Linked Nested Sampling}
+\author{Brendon J. Brewer}
+\date{}
+
+\begin{document}
+\maketitle
+
+\abstract{\noindent Abstract}
+
+% Need this after the abstract
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+\section{Introduction}
+Some notation: $\pi(\theta)$ is the prior, $L(\theta)$ is the
+likelihood function. The constrained prior corresponding
+to level $j$ is
+\begin{align}
+p_j(\theta) &\propto
+\frac{\pi(\theta)\mathds{1}\left[L(\theta) > L_j\right]}
+{X_j}.
+\end{align}
+
+\begin{thebibliography}{999}
+\end{thebibliography}
+
+\end{document}
+
