@@ -41,7 +41,6 @@ def postprocess(plot=True, verbose=True, single_precision=False):
         logw[i] = dn4.logdiffexp(logX_full[level_id[i]],
                                     logX_full[level_id[i]+1])\
                     - np.log(level_id_counts[level_id[i]])
-    logw -= dn4.logsumexp(logw)
 
     logp = logw + logL
     logZ = dn4.logsumexp(logp)
