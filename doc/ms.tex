@@ -30,6 +30,18 @@ p_j(\theta) &\propto
 {X_j}.
 \end{align}
 
+The LIS procedure, when applied to the NS sequence of
+distributions, samples a probability distribution over
+$\theta_{j,i}, K_j$ where $j$ indexes the level,
+$i \in \{1, 2, ..., N\}$ is the
+iteration within the level, and $K$ is a discrete
+selection variable (one per level). The distribution for the
+first level's quantities is
+\begin{align}
+p_{\rm LIS}\left(K_0, \left\{\theta_{0,i}\right\}\right)
+&= \frac{1}{N} \prod_{i=K_0+1}^N T(\theta_{0,i} | \theta_{0,i-1})
+\end{align}
+
 \begin{thebibliography}{999}
 \end{thebibliography}
 
