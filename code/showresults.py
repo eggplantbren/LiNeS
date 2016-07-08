@@ -18,7 +18,7 @@ def postprocess(plot=True, verbose=True, single_precision=False):
 
     # Load the particles
     particles_info = dn4.my_loadtxt("particles_info.txt")
-    run_id = particles_info[:,0].astype("int64")
+    run_id = particles_info[:,0].astype("int64") - 1
     level_id = particles_info[:,1].astype("int64")
     logL = particles_info[:,2]
 
