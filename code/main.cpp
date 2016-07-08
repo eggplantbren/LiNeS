@@ -24,7 +24,7 @@ int main()
         LiNeS::LNS<SpikeSlab> lns(i, classic_sampler.get_logger(), rng);
 
         // Run it
-        lns.run(100000, 10);
+        lns.run(10000, 10);
 
         // Continue using the same rng
         rng = lns.get_rng();
