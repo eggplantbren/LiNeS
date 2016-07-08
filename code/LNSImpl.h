@@ -10,6 +10,7 @@ LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
 ,rng(rng)
 ,iteration(0)
 ,logX(0.0)
+,active(true)
 {
     // Open the levels file
     std::fstream fin(levels_file, std::ios::in);
@@ -46,6 +47,7 @@ LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
 ,rng(rng)
 ,iteration(0)
 ,logX(0.0)
+,active(true)
 {
     size_t num_particles = classic_logger.get_num_particles();
     std::vector<double> logl = classic_logger.get_log_likelihoods();
@@ -112,7 +114,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
 
         for(size_t i=0; i<stash.size(); ++i)
         {
-            if(!above[i] && rng.rand() <= 1.0/count_below)
+            if(active && !above[i] && rng.rand() <= 1.0/count_below)
             {
                 logger.log_particle_info(run_id, iteration-1, logl_stash[i]);
                 logger.save_particle(stash[i]);
@@ -131,6 +133,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
     std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
     if(logX == -std::numeric_limits<double>::max())
     {
+        active = false;
         std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
         ++iteration;
         return;

@@ -36,6 +36,9 @@ class LNS
         // Logger for results
         LNSLogger logger;
 
+        // If active
+        bool active;
+
     public:
         /* Load levels from a DNest4 levels.txt file! */
         LNS(unsigned int run_id, const char* levels_file,
