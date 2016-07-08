@@ -127,7 +127,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         logger.log_level(logX, logl_threshold);
     }
 
-    std::cout<<"# Linked NS Iteration "<<iteration<<". ";
+    std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
     std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
     if(logX == -std::numeric_limits<double>::max())
     {
