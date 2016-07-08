@@ -16,6 +16,9 @@ def postprocess(plot=True, verbose=True, single_precision=False):
         logX[i] = dn4.logsumexp(levels_logX[:, i]) - np.log(num_runs)
     good = (logX > -1E300)
 
+    # Make another version of logX with the prior in it
+    logX_full = np.hstack([0.0, logX])
+
     # Load the particles
     particles_info = dn4.my_loadtxt("particles_info.txt")
     run_id = particles_info[:,0].astype("int64") - 1
@@ -25,12 +28,19 @@ def postprocess(plot=True, verbose=True, single_precision=False):
     # Remove particles corresponding to run whose info isn't available yet
     which = np.nonzero(run_id < levels_logX.shape[0])[0]
     run_id, level_id, logL = run_id[which], level_id[which], logL[which]
+    num_particles = len(run_id)
+
+    # Count the number of particles with each level id
+    level_id_counts = np.zeros(1+level_id.max(), dtype="int64")
+    for i in range(0, num_particles):
+        level_id_counts[level_id[i]] += 1
 
     # Prior weights
-    num_particles = len(run_id)
     logw = np.empty(num_particles)
     for i in range(0, num_particles):
-        logw[i] = levels_logX[run_id[i], level_id[i]]
+        logw[i] = dn4.logdiffexp(logX_full[level_id[i]],
+                                    logX_full[level_id[i]+1])\
+                    - np.log(level_id_counts[level_id[i]])
     logw -= dn4.logsumexp(logw)
 
     logp = logw + logL
