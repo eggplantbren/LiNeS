@@ -141,16 +141,18 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
     unsigned int K;
     if(iteration == 0)
     {
-        K = rng.rand_int(mcmc_steps/thin);
+        K = rng.rand_int(stash.size());
         stash[K].from_prior(rng);
         logl_stash[K] = stash[K].log_likelihood();
         tb_stash[K] = rng.rand();
     }
     else
     {
+        unsigned int attempts = 0;
         while(true)
         {
-            K = rng.rand_int(mcmc_steps/thin);
+            K = rng.rand_int(stash.size());
+            ++attempts;
             if(above[K])
                 break;
         }
