@@ -2,8 +2,12 @@
 #define LiNeS_LNS
 
 #include "DNest4/code/RNG.h"
+#include "DNest4/code/Utils.h"
 #include "ClassicLogger.h"
 #include "LNSLogger.h"
+
+#include <iostream>
+#include <iomanip>
 
 namespace LiNeS
 {
