@@ -1,3 +1,4 @@
+code/liblines.a
 code/posterior_sample.txt
 code/weights.txt
 code/main
@@ -12,4 +13,4 @@ __pycache__
 doc/ms.aux
 doc/ms.log
 doc/ms.pdf
-
+doc/lis.pdf
