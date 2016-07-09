@@ -122,7 +122,10 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         }
 
         if(count_above == 0)
+        {
             logX = -std::numeric_limits<double>::max();
+            active = false;
+        }
         else
             logX += log(count_above) - log(stash.size());
 
@@ -131,9 +134,8 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
 
     std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
     std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
-    if(logX == -std::numeric_limits<double>::max())
+    if(!active)
     {
-        active = false;
         std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
         ++iteration;
         return;
