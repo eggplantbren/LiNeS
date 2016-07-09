@@ -15,8 +15,11 @@ def postprocess(plot=True, verbose=True, single_precision=False):
     for i in range(0, num_levels):
         this_level = levels_logX[:,0] == i+1
         num_runs = this_level.sum()
-        logX[i] = dn4.logsumexp(levels_logX[this_level,1])\
-                            - np.log(num_runs)
+        if num_runs > 0:
+            logX[i] = dn4.logsumexp(levels_logX[this_level,1])\
+                                - np.log(num_runs)
+        else:
+            logX[i] = -1E300
     good = (logX > -1E300)
 
     # Make another version of logX with the prior in it
