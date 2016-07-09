@@ -88,6 +88,16 @@ def postprocess(plot=True, verbose=True, single_precision=False):
         plt.title("Levels")
 
         plt.figure(2)
+        yy = np.diff(logX[good])
+        xx = np.arange(0, len(yy)) + 0.5
+
+        plt.plot(xx, yy, "k-")
+        plt.xlabel("Level")
+        plt.ylabel("$\\ln(X)$ Gap")
+        plt.axhline(-1.0, color="g")
+        plt.ylim([1.05*yy.min(), 0.05])
+
+        plt.figure(3)
         plt.plot(np.exp(logP)[logp > -1E300], "k-")
         plt.xlabel("Particle")
         plt.ylabel("Posterior weight")
