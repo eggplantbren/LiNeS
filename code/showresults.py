@@ -8,12 +8,15 @@ def postprocess(plot=True, verbose=True, single_precision=False):
     levels_logL = dn4.my_loadtxt("levels_logL.txt").flatten()
     levels_logX = dn4.my_loadtxt("levels_logX.txt")
 
-    num_runs, num_levels = levels_logX.shape
+    num_levels = len(levels_logL)
 
     # Loop over levels and average the X estimates
     logX = np.empty(num_levels)
     for i in range(0, num_levels):
-        logX[i] = dn4.logsumexp(levels_logX[:, i]) - np.log(num_runs)
+        this_level = levels_logX[:,0] == i+1
+        num_runs = this_level.sum()
+        logX[i] = dn4.logsumexp(levels_logX[this_level,1])\
+                            - np.log(num_runs)
     good = (logX > -1E300)
 
     # Make another version of logX with the prior in it
