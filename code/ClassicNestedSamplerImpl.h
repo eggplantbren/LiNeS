@@ -17,6 +17,7 @@ ClassicNestedSampler<ModelType>::
 ,log_likelihoods(num_particles)
 ,tiebreakers(num_particles)
 ,logger(num_particles)
+,verbosity(Verbosity::medium)
 {
     if(num_particles == 0)
         throw std::domain_error("ERROR constructing ClassicNestedSampler:\
@@ -27,8 +28,12 @@ ClassicNestedSampler<ModelType>::
 template<class ModelType>
 void ClassicNestedSampler<ModelType>::initialise_particles()
 {
-    std::cout<<"# Generating "<<num_particles<<" particles from the prior...";
-    std::cout<<std::flush;
+    if(verbosity != Verbosity::low)
+    {
+        std::cout<<"# Generating "<<num_particles;
+        std::cout<<" particles from the prior...";
+        std::cout<<std::flush;
+    }
 
     for(size_t i=0; i<num_particles; ++i)
     {
@@ -36,7 +41,9 @@ void ClassicNestedSampler<ModelType>::initialise_particles()
         log_likelihoods[i] = particles[i].log_likelihood();
         tiebreakers[i] = rng.rand();
     }
-    std::cout<<"done."<<std::endl<<std::endl;
+
+    if(verbosity != Verbosity::low)
+        std::cout<<"done."<<std::endl<<std::endl;
 
     // Set iteration to zero
     iteration = 0;
@@ -98,11 +105,15 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
     size_t worst = find_worst_particle();
     logger.log_particle(log_likelihoods[worst], tiebreakers[worst]);
 
-    std::cout<<std::setprecision(12);
-    std::cout<<"# Classic NS iteration "<<iteration<<". ";
-    std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
-    std::cout<<"log(L) = "<<log_likelihoods[worst]<<".\n";
-    std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";
+    if(verbosity == Verbosity::high ||
+        (verbosity == Verbosity::medium && iteration%num_particles == 0))
+    {
+        std::cout<<std::setprecision(12);
+        std::cout<<"# Classic NS iteration "<<iteration<<". ";
+        std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
+        std::cout<<"log(L) = "<<log_likelihoods[worst]<<".\n";
+        std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";
+    }
 
     // Keep threshold
     double logl_threshold = log_likelihoods[worst];
@@ -125,7 +136,9 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
     }
 
     // Print messages
-    std::cout<<"\n#    Generating new particle..."<<std::flush;
+    if(verbosity == Verbosity::high ||
+        (verbosity == Verbosity::medium && iteration%num_particles == 0))
+        std::cout<<"\n#    Generating new particle..."<<std::flush;
 
     // Do MCMC
     ModelType proposal;
@@ -153,8 +166,12 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
         }
     }
 
-    std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<".\n";
-    std::cout<<'#'<<std::endl;
+    if(verbosity == Verbosity::high ||
+        (verbosity == Verbosity::medium && iteration%num_particles == 0))
+    {
+        std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<".\n";
+        std::cout<<'#'<<std::endl;
+    }
 }
 
 } // namespace LiNeS

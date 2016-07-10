@@ -10,6 +10,8 @@
 namespace LiNeS
 {
 
+enum class Verbosity {low, medium, high};
+
 /*
 * An object of this class is a classic nested sampler.
 */
@@ -34,6 +36,9 @@ class ClassicNestedSampler
         // Results get stored here.
         ClassicLogger logger;
 
+        // How much output to print
+        Verbosity verbosity;
+
     public:
         /*
         * Constructor arguments:
@@ -51,6 +56,10 @@ class ClassicNestedSampler
         * Run to a certain depth
         */
         double run(double max_depth, unsigned int mcmc_steps=1000);
+
+        // Setter
+        void set_verbosity(Verbosity v)
+        { verbosity = v; }
 
         /*
         * Get the logger (returns a const reference)
