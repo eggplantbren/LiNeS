@@ -42,6 +42,16 @@ p_{\rm LIS}\left(K_0, \left\{\theta_{0,i}\right\}\right)
 &= \frac{1}{N} \prod_{i=K_0+1}^N T(\theta_{0,i} | \theta_{0,i-1})
 \end{align}
 
+
+\section{Comparison with DNest4}
+
+\subsection{SpikeSlab problem, 20 dimensions, peak shifted by 0.031}
+
+In DNest4, I used this OPTIONS file (the current standard):
+$\{{\texttt 5, 10000, 10000, 100, 100, 10, 100, 10000}\}$ and used
+a single thread. This is $10^8$ likelihood evaluations.
+
+
 \begin{thebibliography}{999}
 \end{thebibliography}
 
