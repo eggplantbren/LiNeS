@@ -45,11 +45,37 @@ p_{\rm LIS}\left(K_0, \left\{\theta_{0,i}\right\}\right)
 
 \section{Comparison with DNest4}
 
-\subsection{SpikeSlab problem, 20 dimensions, peak shifted by 0.031}
-
+\subsection{SpikeSlab problem, 20 dimensions, peak at 0.031}
 In DNest4, I used this OPTIONS file (the current standard):
-$\{{\texttt 5, 10000, 10000, 100, 100, 10, 100, 10000}\}$ and used
+\begin{align}
+\{\texttt{5, 10000, 10000, 100, 100, 10, 100, 10000}\}
+\end{align}
+and used
 a single thread. This is $10^8$ likelihood evaluations.
+Results:
+Done 108 runs. RMS error = 0.3331568245987485
+
+In LiNeS, I used 300 particles and 500 MCMC steps per iteration
+for the Classic warmup run, and
+LNS runs of 10,000 steps each, until $10^8$ MCMC steps
+had been done (not counting the classic warmup).
+
+Results:
+Done 147 runs. RMS error = 0.47972851663867766
+
+What if, in LNS we trade some MCMC steps per level
+for more repetitions?
+
+Does LiNeS performance depend strongly on the quality of the
+classic warmup run? To test, I changed the classic warmup run to 5000
+particles.
+
+\subsection{SpikeSlab problem, 20 dimensions, peak at 0.0}
+As above, the only change being the SpikeSlab definition, making it
+easier.
+DNest4: Done 321 runs. RMS error = 0.04529294847033139
+LiNeS: Done 468 runs. RMS error = 0.05811019003556211
+
 
 
 \begin{thebibliography}{999}
