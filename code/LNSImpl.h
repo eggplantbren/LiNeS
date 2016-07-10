@@ -11,6 +11,7 @@ LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
 ,iteration(0)
 ,logX(0.0)
 ,active(true)
+,mcmc_steps_taken(0)
 {
     // Open the levels file
     std::fstream fin(levels_file, std::ios::in);
@@ -48,6 +49,7 @@ LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
 ,iteration(0)
 ,logX(0.0)
 ,active(true)
+,mcmc_steps_taken(0)
 {
     size_t num_particles = classic_logger.get_num_particles();
     std::vector<double> logl = classic_logger.get_log_likelihoods();
@@ -204,6 +206,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
+        ++mcmc_steps_taken;
     }
 
     // Backwards
@@ -241,6 +244,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
+        ++mcmc_steps_taken;
     }
 
     std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;

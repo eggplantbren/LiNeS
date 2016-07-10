@@ -43,6 +43,9 @@ class LNS
         // If active
         bool active;
 
+        // Count MCMC steps taken
+        unsigned int mcmc_steps_taken;
+
     public:
         /* Load levels from a DNest4 levels.txt file! */
         LNS(unsigned int run_id, const char* levels_file,
@@ -58,6 +61,10 @@ class LNS
         // Getter
         const LNSLogger& get_logger() const
         { return logger; }
+
+        // Getter
+        unsigned int get_mcmc_steps_taken() const
+        { return mcmc_steps_taken; }
 
         // Return a copy of the RNG
         DNest4::RNG get_rng() const
