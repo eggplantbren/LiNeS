@@ -52,6 +52,7 @@ In DNest4, I used this OPTIONS file (the current standard):
 \end{align}
 and used
 a single thread. This is $10^8$ likelihood evaluations.
+
 Results:
 Done 108 runs. RMS error = 0.3331568245987485
 
@@ -59,16 +60,32 @@ In LiNeS, I used 300 particles and 500 MCMC steps per iteration
 for the Classic warmup run, and
 LNS runs of 10,000 steps each, until $10^8$ MCMC steps
 had been done (not counting the classic warmup).
+Consider this the standard from which everything else
+departs.
 
 Results:
 Done 147 runs. RMS error = 0.47972851663867766
 
 What if, in LNS we trade some MCMC steps per level
-for more repetitions?
+for more repetitions? Changing to LNS runs of
+3,000 steps gives:
+Done 102 runs. RMS error = 0.6768875559288647
+So no, that doesn't help.
+
+Changing to LNS runs of 30,000 steps gives:
+Done 179 runs. RMS error = 0.41877131444758076
+
+Clanging to LNS runs of 100,000 steps gives:
+
 
 Does LiNeS performance depend strongly on the quality of the
 classic warmup run? To test, I changed the classic warmup run to 5000
-particles.
+particles. Did it make a difference? Nup. Here's the result:
+Done 101 runs. RMS error = 0.4770324559809218
+
+
+
+{\bf DNest4 seems to be unequivocally better on this problem.}
 
 \subsection{SpikeSlab problem, 20 dimensions, peak at 0.0}
 As above, the only change being the SpikeSlab definition, making it
