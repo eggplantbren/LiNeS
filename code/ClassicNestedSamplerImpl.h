@@ -27,29 +27,30 @@ ClassicNestedSampler<ModelType>::
     rng.set_seed(seed);
 }
 
-//template<class ModelType>
-//void ClassicNestedSampler<ModelType>::initialise_particles()
-//{
-//    if(verbosity != Verbosity::low)
-//    {
-//        std::cout<<"# Generating "<<num_particles;
-//        std::cout<<" particles from the prior...";
-//        std::cout<<std::flush;
-//    }
+template<class ModelType>
+void ClassicNestedSampler<ModelType>::initialise_particles()
+{
+    if(verbosity != Verbosity::low)
+    {
+        std::cout<<"# Generating "<<num_particles;
+        std::cout<<" particles from the prior...";
+        std::cout<<std::flush;
+    }
 
-//    for(size_t i=0; i<num_particles; ++i)
-//    {
-//        particles[i].from_prior(rng);
-//        log_likelihoods[i] = particles[i].log_likelihood();
-//        tiebreakers[i] = rng.rand();
-//    }
+    for(size_t i=0; i<num_particles; ++i)
+    {
+        particles[i].from_prior(rng);
+        scalars[i] = particles[i].get_scalars();
+        for(double& tb: tiebreakers[i])
+            tb = rng.rand();
+    }
 
-//    if(verbosity != Verbosity::low)
-//        std::cout<<"done."<<std::endl<<std::endl;
+    if(verbosity != Verbosity::low)
+        std::cout<<"done."<<std::endl<<std::endl;
 
-//    // Set iteration to zero
-//    iteration = 0;
-//}
+    // Set iteration to zero
+    iteration = 0;
+}
 
 //template<class ModelType>
 //size_t ClassicNestedSampler<ModelType>::find_worst_particle() const
