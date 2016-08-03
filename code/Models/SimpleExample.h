@@ -8,7 +8,7 @@
 class SimpleExample
 {
     private:
-        static const size_t num_params = 2;
+        static const size_t num_scalars = 2;
 
         std::vector<double> params;
 
@@ -32,8 +32,8 @@ class SimpleExample
         std::string description() const;
 
         // Return number of parameters
-        static size_t get_num_params()
-        { return num_params; }
+        static size_t get_num_scalars()
+        { return num_scalars; }
 };
 
 #endif
