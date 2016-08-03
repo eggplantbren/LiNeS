@@ -8,6 +8,8 @@
 class SimpleExample
 {
     private:
+        static const size_t num_params = 2;
+
         std::vector<double> params;
 
     public:
@@ -28,6 +30,10 @@ class SimpleExample
 
         // Return string with column information
         std::string description() const;
+
+        // Return number of parameters
+        static size_t get_num_params()
+        { return num_params; }
 };
 
 #endif

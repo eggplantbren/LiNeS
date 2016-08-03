@@ -30,8 +30,8 @@ class ClassicNestedSampler
 
         // The particles, their log-likelihoods, and tiebreakers.
         std::vector<ModelType> particles;
-        std::vector<double> log_likelihoods;
-        std::vector<double> tiebreakers;
+        std::vector< std::vector<double> > scalars;
+        std::vector< std::vector<double> > tiebreakers;
 
         // Results get stored here.
         ClassicLogger logger;
