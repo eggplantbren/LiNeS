@@ -2,6 +2,7 @@
 #include <limits>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include "DNest4/code/Utils.h"
 
 namespace LiNeS
@@ -18,6 +19,8 @@ ClassicNestedSampler<ModelType>::
                     std::vector<double>(ModelType::get_num_scalars()))
 ,tiebreakers(num_particles,
                     std::vector<double>(ModelType::get_num_scalars()))
+,floor(ModelType::get_num_scalars(), -std::numeric_limits<double>::max())
+,selection_probs(ModelType::get_num_scalars())
 ,logger(num_particles)
 ,verbosity(Verbosity::medium)
 {
@@ -25,6 +28,15 @@ ClassicNestedSampler<ModelType>::
         throw std::domain_error("ERROR constructing ClassicNestedSampler:\
                                             num_particles can't be zero.");
     rng.set_seed(seed);
+
+    // Generate selection probabilities for the scalars
+    for(double& p: selection_probs)
+        p = 5*rng.randn();
+    // Normalise to max
+    double max = *std::max_element(selection_probs.begin(),
+                                                selection_probs.end());
+    for(double& p: selection_probs)
+        p /= max;
 }
 
 template<class ModelType>

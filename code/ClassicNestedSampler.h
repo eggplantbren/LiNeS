@@ -33,6 +33,10 @@ class ClassicNestedSampler
         std::vector< std::vector<double> > scalars;
         std::vector< std::vector<double> > tiebreakers;
 
+        // Lower limits and selection probabilities for scalars
+        std::vector<double> floor;
+        std::vector<double> selection_probs;
+
         // Results get stored here.
         ClassicLogger logger;
 
