@@ -4,6 +4,7 @@
 #include <vector>
 #include <stddef.h>
 #include <ctime>
+#include <tuple>
 #include "DNest4/code/RNG.h"
 #include "ClassicLogger.h"
 
@@ -84,7 +85,7 @@ class ClassicNestedSampler
         /*
         * Find the worst (lowest likelihood) particle and returns its index.
         */
-        size_t find_worst_particle() const;
+        std::tuple<size_t, size_t> find_worst_particle();
 
         /*
         * Estimate -log(X) of the most recent iteration.

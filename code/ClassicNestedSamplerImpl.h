@@ -64,33 +64,41 @@ void ClassicNestedSampler<ModelType>::initialise_particles()
     iteration = 0;
 }
 
-//template<class ModelType>
-//size_t ClassicNestedSampler<ModelType>::find_worst_particle() const
-//{
-//    size_t which;
+template<class ModelType>
+std::tuple<size_t, size_t>
+    ClassicNestedSampler<ModelType>::find_worst_particle()
+{
+    // Choose a scalar
+    size_t which_scalar;
+    do
+    {
+        which_scalar = rng.rand_int(ModelType::get_num_scalars());
+    }while(rng.rand() > selection_probs[which_scalar]);
 
-//    double logl = std::numeric_limits<double>::max();
-//    double tb = 1.0;
+    size_t which_particle;
 
-//    bool success = false;
+    double s = std::numeric_limits<double>::max();
+    double tb = 1.0;
+    bool success = false;
 
-//    for(size_t i=0; i<num_particles; ++i)
-//    {
-//        if(log_likelihoods[i] < logl ||
-//                (log_likelihoods[i] == logl && tiebreakers[i] < tb))
-//        {
-//            logl = log_likelihoods[i];
-//            tb = tiebreakers[i];
-//            which = i;
-//            success = true;
-//        }
-//    }
-//    if(!success)
-//        std::cerr<<"# WARNING in ClassicNestedSampler::find_worst_particle"<<
-//                    std::endl;
+    for(size_t i=0; i<num_particles; ++i)
+    {
+        if(scalars[i][which_scalar] < s ||
+                (scalars[i][which_scalar] == s &&
+                    tiebreakers[i][which_scalar] < tb))
+        {
+            s = scalars[i][which_scalar];
+            tb = tiebreakers[i][which_scalar];
+            which_particle = i;
+            success = true;
+        }
+    }
+    if(!success)
+        std::cerr<<"# WARNING in ClassicNestedSampler::find_worst_particle"<<
+                    std::endl;
 
-//    return which;
-//}
+    return std::tuple<double, double>{which_scalar, which_particle};
+}
 
 //template<class ModelType>
 //double ClassicNestedSampler<ModelType>::get_depth() const
