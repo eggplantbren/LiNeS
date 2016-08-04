@@ -20,6 +20,7 @@ ClassicNestedSampler<ModelType>::
 ,tiebreakers(num_particles,
                     std::vector<double>(ModelType::get_num_scalars()))
 ,floor(ModelType::get_num_scalars(), -std::numeric_limits<double>::max())
+,tb_floor(ModelType::get_num_scalars(), -std::numeric_limits<double>::max())
 ,selection_probs(ModelType::get_num_scalars())
 ,logger(num_particles, ModelType::get_num_scalars())
 ,verbosity(Verbosity::medium)
@@ -107,13 +108,11 @@ double ClassicNestedSampler<ModelType>::get_depth() const
 }
 
 template<class ModelType>
-double ClassicNestedSampler<ModelType>::run(double max_depth,
+void ClassicNestedSampler<ModelType>::run(double max_depth,
                                                     unsigned int mcmc_steps)
 {
-    do_iteration(mcmc_steps);
-//    while(get_depth() < max_depth)
-  //      do_iteration(mcmc_steps);
-    //return logger.calculate_logZ();
+    while(get_depth() < max_depth)
+        do_iteration(mcmc_steps);
 }
 
 
@@ -128,81 +127,98 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
     // Find and save worst particle
     auto t = find_worst_particle();
     size_t which_scalar, which_particle;
-    tie(t, which_scalar, which_particle);
-
-    std::cout<<which_scalar<<' '<<which_particle<<' ';
+    std::tie(which_scalar, which_particle) = t;
 
     logger.log_particle(scalars[which_particle][which_scalar],
                             tiebreakers[which_particle][which_scalar],
                             which_scalar);
+    floor[which_scalar] = scalars[which_particle][which_scalar];
+    tb_floor[which_scalar] = tiebreakers[which_particle][which_scalar];    
 
     if(verbosity == Verbosity::high ||
         (verbosity == Verbosity::medium && iteration%num_particles == 0))
     {
         std::cout<<std::setprecision(12);
         std::cout<<"# Classic NS iteration "<<iteration<<". ";
-        std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
-//        std::cout<<"log(L) = "<<log_likelihoods[worst]<<".\n";
-//        std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";
+        std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<".\n";
+        std::cout<<"# Floor = {";
+        for(size_t i=0; i<floor.size(); ++i)
+        {
+            std::cout<<floor[i];
+            if(i != (floor.size() - 1))
+                std::cout<<", ";
+        }
+        std::cout<<"}.\n";
     }
 
-//    // Keep threshold
-//    double logl_threshold = log_likelihoods[worst];
-//    double tb_threshold = tiebreakers[worst];
+    // Clone a survivor
+    if(num_particles != 1)
+    {
+        size_t copy;
+        do
+        {
+            copy = rng.rand_int(num_particles);
+        }while(copy == which_particle);
+        particles[which_particle] = particles[copy];
+        scalars[which_particle] = scalars[copy];
+        tiebreakers[which_particle] = tiebreakers[copy];
+    }
 
-//    // An alias
-//    size_t& which = worst;
+    // Print messages
+    if(verbosity == Verbosity::high ||
+        (verbosity == Verbosity::medium && iteration%num_particles == 0))
+        std::cout<<"# Generating new particle..."<<std::flush;
 
-//    // Clone a survivor
-//    if(num_particles != 1)
-//    {
-//        size_t copy;
-//        do
-//        {
-//            copy = rng.rand_int(num_particles);
-//        }while(copy == worst);
-//        particles[which] = particles[copy];
-//        log_likelihoods[which] = log_likelihoods[copy];
-//        tiebreakers[which] = tiebreakers[copy];
-//    }
+    // Do MCMC
+    ModelType proposal;
+    double logH;
+    std::vector<double> s_proposal, tb_proposal;
+    unsigned int accepts = 0;
+    for(size_t i=0; i<mcmc_steps; ++i)
+    {
+        proposal = particles[which_particle];
+        logH = proposal.perturb(rng);
 
-//    // Print messages
-//    if(verbosity == Verbosity::high ||
-//        (verbosity == Verbosity::medium && iteration%num_particles == 0))
-//        std::cout<<"\n#    Generating new particle..."<<std::flush;
+        if(rng.rand() <= exp(logH))
+        {
+            s_proposal = proposal.get_scalars();
 
-//    // Do MCMC
-//    ModelType proposal;
-//    double logl_proposal, tb_proposal, logH;
-//    unsigned int accepts = 0;
-//    for(size_t i=0; i<mcmc_steps; ++i)
-//    {
-//        proposal = particles[which];
-//        logH = proposal.perturb(rng);
+            tb_proposal = tiebreakers[which_particle];
+            double& tb = tb_proposal[rng.rand_int(tb_proposal.size())];
+            tb += rng.randh();
+            DNest4::wrap(tb, 0.0, 1.0);
 
-//        if(rng.rand() <= exp(logH))
-//        {
-//            logl_proposal = proposal.log_likelihood();
-//            tb_proposal = tiebreakers[which] + rng.randh();
-//            DNest4::wrap(tb_proposal, 0.0, 1.0);
+            if(is_okay(s_proposal, tb_proposal))
+            {
+                particles[which_particle] = proposal;
+                scalars[which_particle] = s_proposal;
+                tiebreakers[which_particle] = tb_proposal;
+                ++accepts;
+            }
+        }
+    }
 
-//            if(logl_proposal > logl_threshold ||
-//                (logl_proposal == logl_threshold && tb_proposal > tb_threshold))
-//            {
-//                particles[which] = proposal;
-//                log_likelihoods[which] = logl_proposal;
-//                tiebreakers[which] = tb_proposal;
-//                ++accepts;
-//            }
-//        }
-//    }
+    if(verbosity == Verbosity::high ||
+        (verbosity == Verbosity::medium && iteration%num_particles == 0))
+    {
+        std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<'.';
+        std::cout<<"\n#"<<std::endl;
+    }
+}
 
-//    if(verbosity == Verbosity::high ||
-//        (verbosity == Verbosity::medium && iteration%num_particles == 0))
-//    {
-//        std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<".\n";
-//        std::cout<<'#'<<std::endl;
-//    }
+template<class ModelType>
+bool ClassicNestedSampler<ModelType>::is_okay(std::vector<double> s_proposal,
+                                   std::vector<double> tb_proposal) const
+{
+    for(size_t i=0; i<s_proposal.size(); ++i)
+    {
+        if(s_proposal[i] < floor[i])
+            return false;
+        if(s_proposal[i] == floor[i] && (tb_proposal[i] < tb_floor[i]))
+            return false;
+    }
+
+    return true;
 }
 
 } // namespace LiNeS

@@ -36,6 +36,7 @@ class ClassicNestedSampler
 
         // Lower limits and selection probabilities for scalars
         std::vector<double> floor;
+        std::vector<double> tb_floor;
         std::vector<double> selection_probs;
 
         // Results get stored here.
@@ -60,7 +61,7 @@ class ClassicNestedSampler
         /*
         * Run to a certain depth
         */
-        double run(double max_depth, unsigned int mcmc_steps=1000);
+        void run(double max_depth, unsigned int mcmc_steps=1000);
 
         // Setter
         void set_verbosity(Verbosity v)
@@ -91,6 +92,13 @@ class ClassicNestedSampler
         * Estimate -log(X) of the most recent iteration.
         */
         double get_depth() const;
+
+        /*
+        * Test whether scalars and tiebreakers for a proposal
+        * are okay wrt the current floors.
+        */
+        bool is_okay(std::vector<double> s_proposal,
+                     std::vector<double> tb_proposal) const;
 };
 
 } // namespace LiNeS

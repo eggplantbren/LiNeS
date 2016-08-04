@@ -40,6 +40,7 @@ void ClassicLogger::log_particle(double s, double tb, size_t which_scalar)
     scalars.back()[which_scalar] = s;
     tiebreakers.back()[which_scalar] = tb;
 
+    fout<<(scalars.size()-1)<<' ';
     for(size_t i=0; i<num_scalars; ++i)
         fout<<scalars.back()[i]<<' ';
     for(size_t i=0; i<num_scalars; ++i)

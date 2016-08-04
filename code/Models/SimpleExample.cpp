@@ -26,7 +26,7 @@ double SimpleExample::perturb(RNG& rng)
 
 std::vector<double> SimpleExample::get_scalars() const
 {
-    std::vector<double> scalars(0.0, 0.0);
+    std::vector<double> scalars{0.0, 0.0};
 
     for(double x: params)
     {
