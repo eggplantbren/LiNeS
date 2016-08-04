@@ -21,7 +21,7 @@ ClassicNestedSampler<ModelType>::
                     std::vector<double>(ModelType::get_num_scalars()))
 ,floor(ModelType::get_num_scalars(), -std::numeric_limits<double>::max())
 ,selection_probs(ModelType::get_num_scalars())
-,logger(num_particles)
+,logger(num_particles, ModelType::get_num_scalars())
 ,verbosity(Verbosity::medium)
 {
     if(num_particles == 0)
@@ -100,43 +100,51 @@ std::tuple<size_t, size_t>
     return std::tuple<double, double>{which_scalar, which_particle};
 }
 
-//template<class ModelType>
-//double ClassicNestedSampler<ModelType>::get_depth() const
-//{
-//    return iteration*(1.0/num_particles);
-//}
+template<class ModelType>
+double ClassicNestedSampler<ModelType>::get_depth() const
+{
+    return iteration*(1.0/num_particles);
+}
 
-//template<class ModelType>
-//double ClassicNestedSampler<ModelType>::run(double max_depth,
-//                                                    unsigned int mcmc_steps)
-//{
+template<class ModelType>
+double ClassicNestedSampler<ModelType>::run(double max_depth,
+                                                    unsigned int mcmc_steps)
+{
+    do_iteration(mcmc_steps);
 //    while(get_depth() < max_depth)
-//        do_iteration(mcmc_steps);
-//    return logger.calculate_logZ();
-//}
+  //      do_iteration(mcmc_steps);
+    //return logger.calculate_logZ();
+}
 
 
-//template<class ModelType>
-//void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
-//{
-//    // Initialise the particles if it hasn't been done already
-//    if(iteration == -1)
-//        initialise_particles();
-//    ++iteration;
+template<class ModelType>
+void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
+{
+    // Initialise the particles if it hasn't been done already
+    if(iteration == -1)
+        initialise_particles();
+    ++iteration;
 
-//    // Find and save worst particle
-//    size_t worst = find_worst_particle();
-//    logger.log_particle(log_likelihoods[worst], tiebreakers[worst]);
+    // Find and save worst particle
+    auto t = find_worst_particle();
+    size_t which_scalar, which_particle;
+    tie(t, which_scalar, which_particle);
 
-//    if(verbosity == Verbosity::high ||
-//        (verbosity == Verbosity::medium && iteration%num_particles == 0))
-//    {
-//        std::cout<<std::setprecision(12);
-//        std::cout<<"# Classic NS iteration "<<iteration<<". ";
-//        std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
+    std::cout<<which_scalar<<' '<<which_particle<<' ';
+
+    logger.log_particle(scalars[which_particle][which_scalar],
+                            tiebreakers[which_particle][which_scalar],
+                            which_scalar);
+
+    if(verbosity == Verbosity::high ||
+        (verbosity == Verbosity::medium && iteration%num_particles == 0))
+    {
+        std::cout<<std::setprecision(12);
+        std::cout<<"# Classic NS iteration "<<iteration<<". ";
+        std::cout<<"log(X) = "<<iteration*(-1.0/num_particles)<<". ";
 //        std::cout<<"log(L) = "<<log_likelihoods[worst]<<".\n";
 //        std::cout<<"#    log(Z) = "<<logger.calculate_logZ()<<". ";
-//    }
+    }
 
 //    // Keep threshold
 //    double logl_threshold = log_likelihoods[worst];
@@ -195,7 +203,7 @@ std::tuple<size_t, size_t>
 //        std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<".\n";
 //        std::cout<<'#'<<std::endl;
 //    }
-//}
+}
 
 } // namespace LiNeS
 

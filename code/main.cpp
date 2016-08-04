@@ -1,7 +1,6 @@
 #include <iostream>
 #include "LiNeS.h"
 #include "ClassicNestedSampler.h"
-#include "LNS.h"
 #include "Models/SimpleExample.h"
 
 int main()
@@ -15,11 +14,10 @@ int main()
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
     classic_sampler.run(100.0, 500);
 
+/*
     // Get a copy of the RNG from the Classic Nested Sampler
     DNest4::RNG rng = classic_sampler.get_rng();
 
-
-/*
     for(int i=0; i<1000000; ++i)
     {
         // Create a Linked Nested Sampler
