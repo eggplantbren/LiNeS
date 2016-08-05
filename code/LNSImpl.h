@@ -106,122 +106,135 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         logger.log_level(logX, s_threshold);
     }
 
-//    std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
-//    std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
-//    if(!active)
-//    {
-//        std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
-//        ++iteration;
-//        return;
-//    }
+    std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
+    std::cout<<"(log(X), scalars) = ("<<logX<<", ";
+    for(size_t i=0; i<s_threshold.size(); ++i)
+    {
+        std::cout<<s_threshold[i];
+        if(i != (s_threshold.size()-1))
+            std::cout<<", ";
+    }
+    std::cout<<").\n";
 
-//    std::cout<<"#    Doing MCMC..."<<std::flush;
+    if(!active)
+    {
+        std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
+        ++iteration;
+        return;
+    }
 
-//    unsigned int K;
-//    if(iteration == 0)
-//    {
-//        K = rng.rand_int(stash.size());
-//        stash[K].from_prior(rng);
-//        logl_stash[K] = stash[K].log_likelihood();
-//        tb_stash[K] = rng.rand();
-//    }
-//    else
-//    {
-//        unsigned int attempts = 0;
-//        while(true)
-//        {
-//            K = rng.rand_int(stash.size());
-//            ++attempts;
-//            if(above[K])
-//                break;
-//        }
-//    }
+    std::cout<<"#    Doing MCMC..."<<std::flush;
 
-//    ModelType particle = stash[K];
-//    double logl_particle = logl_stash[K];
-//    double tb_particle = tb_stash[K];
+    unsigned int K;
 
-//    ModelType proposal;
-//    double logl_proposal, tb_proposal, logH;
+    if(iteration == 0)
+    {
+        K = rng.rand_int(stashed_particles.size());
+        stashed_particles[K].from_prior(rng);
+        stashed_scalars[K] = stashed_particles[K].get_scalars();
+        stashed_tiebreakers[K] = rng.rand();
+    }
+    else
+    {
+        unsigned int attempts = 0;
+        while(true)
+        {
+            K = rng.rand_int(stashed_particles.size());
+            ++attempts;
+            if(above[K])
+                break;
+        }
+    }
 
-//    unsigned int tries = 0;
-//    unsigned int accepts = 0;
+    ModelType particle = stashed_particles[K];
+    std::vector<double> particle_scalars = stashed_scalars[K];
+    std::vector<double> particle_tiebreakers = stashed_tiebreakers[K];
 
-//    // Forwards
-//    for(unsigned int i=K+1; i<stash.size(); ++i)
-//    {
-//        for(unsigned int j=0; j<thin; ++j)
-//        {
-//            ++tries;
+    ModelType proposal;
+    std::vector<double> proposal_scalars, proposal_tiebreakers;
+    double logH;
 
-//            // Do the proposal
-//            proposal = particle;
-//            logH = proposal.perturb(rng);
-//            logl_proposal = proposal.log_likelihood();
-//            tb_proposal = tb_particle + rng.randh();
-//            DNest4::wrap(tb_proposal, 0.0, 1.0);
+    unsigned int tries = 0;
+    unsigned int accepts = 0;
 
-//            if(rng.rand() <= exp(logH))
-//            {
-//                if(logl_proposal > logl_threshold ||
-//                    (logl_proposal == logl_threshold &&
-//                     tb_proposal   == tb_threshold))
-//                {
-//                    particle = proposal;
-//                    logl_particle = logl_proposal;
-//                    tb_particle = tb_proposal;
-//                    ++accepts;
-//                }
-//            }
-//        }
+    // Forwards
+    for(unsigned int i=K+1; i<stashed_particles.size(); ++i)
+    {
+        for(unsigned int j=0; j<thin; ++j)
+        {
+            ++tries;
 
-//        stash[i] = particle;
-//        logl_stash[i] = logl_particle;
-//        tb_stash[i] = tb_particle;
-//        ++mcmc_steps_taken;
-//    }
+            // Do the proposal
+            proposal = particle;
+            logH = proposal.perturb(rng);
+            proposal_tiebreakers = particle_tiebreakers;
+            double& junk = proposal_tiebreakers
+                                [rng.rand_int(proposal_tiebreakers.size())];
+            junk += rng.randh();
+            DNest4::wrap(junk, 0.0, 1.0);
 
-//    // Backwards
-//    particle = stash[K];
-//    logl_particle = logl_stash[K];
-//    tb_particle = tb_stash[K];
+            if(rng.rand() <= exp(logH))
+            {
+                proposal_scalars = proposal.get_scalars();
+                if(is_okay(proposal_scalars, proposal_tiebreakers,
+                            s_threshold, tb_threshold))
+                {
+                    particle = proposal;
+                    particle_scalars = proposal_scalars;
+                    particle_tiebreakers = proposal_tiebreakers;
+                    ++accepts;
+                }
+            }
+        }
+        stashed_particles[i] = particle;
+        stashed_scalars[i] = particle_scalars;
+        stashed_tiebreakers[i] = particle_tiebreakers;
+        ++mcmc_steps_taken;
+    }
 
-//    for(int i=K-1; i>=0; --i)
-//    {
-//        for(unsigned int j=0; j<thin; ++j)
-//        {
-//            ++tries;
+    // Backwards
+    particle = stashed_particles[K];
+    particle_scalars = stashed_scalars[K];
+    particle_tiebreakers = stashed_tiebreakers[K];
 
-//            // Do the proposal
-//            proposal = particle;
-//            logH = proposal.perturb(rng);
-//            logl_proposal = proposal.log_likelihood();
-//            tb_proposal = tb_particle + rng.randh();
-//            DNest4::wrap(tb_proposal, 0.0, 1.0);
+    for(int i=K-1; i>=0; --i)
+    {
+        for(unsigned int j=0; j<thin; ++j)
+        {
+            ++tries;
 
-//            if(rng.rand() <= exp(logH))
-//            {
-//                if(logl_proposal > logl_threshold ||
-//                    (logl_proposal == logl_threshold &&
-//                     tb_proposal   == tb_threshold))
-//                {
-//                    particle = proposal;
-//                    logl_particle = logl_proposal;
-//                    tb_particle = tb_proposal;
-//                    ++accepts;
-//                }
-//            }
-//        }
+            // Do the proposal
+            proposal = particle;
+            logH = proposal.perturb(rng);
+            proposal_tiebreakers = particle_tiebreakers;
+            double& junk = proposal_tiebreakers
+                                [rng.rand_int(proposal_tiebreakers.size())];
+            junk += rng.randh();
+            DNest4::wrap(junk, 0.0, 1.0);
 
-//        stash[i] = particle;
-//        logl_stash[i] = logl_particle;
-//        tb_stash[i] = tb_particle;
-//        ++mcmc_steps_taken;
-//    }
+            if(rng.rand() <= exp(logH))
+            {
+                proposal_scalars = proposal.get_scalars();
+                if(is_okay(proposal_scalars, proposal_tiebreakers,
+                            s_threshold, tb_threshold))
+                {
+                    particle = proposal;
+                    particle_scalars = proposal_scalars;
+                    particle_tiebreakers = proposal_tiebreakers;
+                    ++accepts;
+                }
+            }
+        }
+        stashed_particles[i] = particle;
+        stashed_scalars[i] = particle_scalars;
+        stashed_tiebreakers[i] = particle_tiebreakers;
+        ++mcmc_steps_taken;
 
-//    std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;
+    }
 
-//    ++iteration;
+    std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;
+
+    ++iteration;
 }
 
 } // namespace LiNeS
