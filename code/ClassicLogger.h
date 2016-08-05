@@ -50,12 +50,14 @@ class ClassicLogger
         /*
         * Getters (these return copies)
         */
-//        size_t get_num_particles() const
-//        { return num_particles; }
-//        std::vector<double> get_log_likelihoods() const
-//        { return log_likelihoods; }
-//        std::vector<double> get_tiebreakers() const
-//        { return tiebreakers; }
+        size_t get_num_particles() const
+        { return num_particles; }
+
+        std::vector< std::vector<double> > get_scalars() const
+        { return scalars; }
+
+        std::vector< std::vector<double> > get_tiebreakers() const
+        { return tiebreakers; }
 
         // Clear output files
         static void clear_output_files();

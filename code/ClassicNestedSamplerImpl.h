@@ -188,7 +188,7 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
             tb += rng.randh();
             DNest4::wrap(tb, 0.0, 1.0);
 
-            if(is_okay(s_proposal, tb_proposal))
+            if(is_okay(s_proposal, tb_proposal, floor, tb_floor))
             {
                 particles[which_particle] = proposal;
                 scalars[which_particle] = s_proposal;
@@ -204,21 +204,6 @@ void ClassicNestedSampler<ModelType>::do_iteration(unsigned int mcmc_steps)
         std::cout<<"done. Accepted "<<accepts<<"/"<<mcmc_steps<<'.';
         std::cout<<"\n#"<<std::endl;
     }
-}
-
-template<class ModelType>
-bool ClassicNestedSampler<ModelType>::is_okay(std::vector<double> s_proposal,
-                                   std::vector<double> tb_proposal) const
-{
-    for(size_t i=0; i<s_proposal.size(); ++i)
-    {
-        if(s_proposal[i] < floor[i])
-            return false;
-        if(s_proposal[i] == floor[i] && (tb_proposal[i] < tb_floor[i]))
-            return false;
-    }
-
-    return true;
 }
 
 } // namespace LiNeS

@@ -7,6 +7,7 @@
 #include <tuple>
 #include "DNest4/code/RNG.h"
 #include "ClassicLogger.h"
+#include "LiNeS.h"
 
 namespace LiNeS
 {
@@ -92,13 +93,6 @@ class ClassicNestedSampler
         * Estimate -log(X) of the most recent iteration.
         */
         double get_depth() const;
-
-        /*
-        * Test whether scalars and tiebreakers for a proposal
-        * are okay wrt the current floors.
-        */
-        bool is_okay(std::vector<double> s_proposal,
-                     std::vector<double> tb_proposal) const;
 };
 
 } // namespace LiNeS

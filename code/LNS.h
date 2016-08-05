@@ -23,13 +23,13 @@ class LNS
         DNest4::RNG rng;
 
         // The particle stash
-        std::vector<ModelType> stash;
-        std::vector<double> logl_stash;
-        std::vector<double> tb_stash;
+        std::vector<ModelType> stashed_particles;
+        std::vector< std::vector<double> > stashed_scalars;
+        std::vector< std::vector<double> > stashed_tiebreakers;
 
         // The levels
-        std::vector<double> levels_log_likelihoods;
-        std::vector<double> levels_tiebreakers;
+        std::vector< std::vector<double> > levels_scalars;
+        std::vector< std::vector<double> > levels_tiebreakers;
 
         // Iteration counter
         unsigned int iteration;
@@ -47,10 +47,6 @@ class LNS
         unsigned int mcmc_steps_taken;
 
     public:
-        /* Load levels from a DNest4 levels.txt file! */
-        LNS(unsigned int run_id, const char* levels_file,
-                                        DNest4::RNG rng=DNest4::RNG());
-
         /* Get levels from a ClassicLogger. */
         LNS(unsigned int run_id, const ClassicLogger& classic_logger,
                                         DNest4::RNG rng=DNest4::RNG());
@@ -77,7 +73,7 @@ class LNS
 
 } // namespace LiNeS
 
-//#include "LNSImpl.h"
+#include "LNSImpl.h"
 
 #endif
 
