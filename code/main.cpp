@@ -2,6 +2,7 @@
 #include "LiNeS.h"
 #include "ClassicNestedSampler.h"
 #include "Models/SimpleExample.h"
+#include "LNS.h"
 
 int main()
 {

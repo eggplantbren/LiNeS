@@ -16,12 +16,12 @@ class LNSLogger
     private:
         // Info about levels
         std::vector<double> levels_logX;
-        std::vector<double> levels_logL;
+        std::vector< std::vector<double> > levels_scalars;
 
         // Info about particles
         std::vector<unsigned int> particles_run_id;
         std::vector<size_t> particles_level_id;
-        std::vector<double> particles_logL;
+        std::vector< std::vector<double> > particles_scalars;
 
     public:
         // Constructor (all the vectors start with size 0)
