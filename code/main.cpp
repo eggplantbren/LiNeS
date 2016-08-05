@@ -13,13 +13,12 @@ int main()
     LiNeS::ClassicNestedSampler<SimpleExample> classic_sampler(100);
 
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
-    classic_sampler.run(100.0, 500);
+    classic_sampler.run(100.0, 50);
 
-/*
     // Get a copy of the RNG from the Classic Nested Sampler
     DNest4::RNG rng = classic_sampler.get_rng();
 
-    for(int i=0; i<1000000; ++i)
+    for(int i=0; i<10000; ++i)
     {
         // Create a Linked Nested Sampler
         LiNeS::LNS<SimpleExample> lns(i+1, classic_sampler.get_logger(), rng);
@@ -30,7 +29,7 @@ int main()
         // Continue using the same rng
         rng = lns.get_rng();
     }
-*/
+
     return 0;
 }
 

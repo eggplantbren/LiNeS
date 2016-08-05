@@ -132,7 +132,10 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         K = rng.rand_int(stashed_particles.size());
         stashed_particles[K].from_prior(rng);
         stashed_scalars[K] = stashed_particles[K].get_scalars();
-        stashed_tiebreakers[K] = rng.rand();
+
+        stashed_tiebreakers[K] = stashed_scalars[K];
+        for(double& _t: stashed_tiebreakers[K])
+            _t = rng.rand();
     }
     else
     {
