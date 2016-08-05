@@ -10,8 +10,8 @@ namespace LiNeS
 
 template<class ModelType>
 ClassicNestedSampler<ModelType>::
-    ClassicNestedSampler(size_t num_particles, unsigned int seed)
-:rng()
+    ClassicNestedSampler(size_t num_particles, DNest4::RNG rng)
+:rng(rng)
 ,num_particles(num_particles)
 ,iteration(-1)  // -1 = particles not initialised.
 ,particles(num_particles)
@@ -28,7 +28,6 @@ ClassicNestedSampler<ModelType>::
     if(num_particles == 0)
         throw std::domain_error("ERROR constructing ClassicNestedSampler:\
                                             num_particles can't be zero.");
-    rng.set_seed(seed);
 
     // Generate selection probabilities for the scalars
     for(double& p: selection_probs)

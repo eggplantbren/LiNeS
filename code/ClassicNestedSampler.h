@@ -52,7 +52,7 @@ class ClassicNestedSampler
         *   size_t num_particles = the number of particles
         *   unsigned int seed = random number generator seed
         */
-        ClassicNestedSampler(size_t num_particles, unsigned int seed=time(0));
+        ClassicNestedSampler(size_t num_particles, DNest4::RNG rng);
 
         /*
         * Do an iteration of Nested Sampling.
