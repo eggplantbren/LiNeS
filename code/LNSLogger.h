@@ -31,11 +31,11 @@ class LNSLogger
         ~LNSLogger();
 
         // Add to the log
-        void log_level(double logX, double logL);
+        void log_level(double logX, const std::vector<double>& scalars);
 
         // Log particle info
         void log_particle_info(unsigned int run_id, size_t level_id,
-                                                                  double logL);
+                                    const std::vector<double>& scalars);
 
         // Save a particle to disk
         template<class ModelType>

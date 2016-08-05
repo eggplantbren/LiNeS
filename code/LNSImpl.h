@@ -89,7 +89,8 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         {
             if(active && !above[i] && rng.rand() <= 1.0/count_below)
             {
-//                logger.log_particle_info(run_id, iteration-1, logl_stash[i]);
+                logger.log_particle_info(run_id, iteration-1,
+                                                stashed_scalars[i]);
                 logger.save_particle(stashed_particles[i]);
             }
         }
@@ -102,7 +103,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         else
             logX += log(count_above) - log(stashed_particles.size());
 
-//        logger.log_level(logX, logl_threshold);
+        logger.log_level(logX, s_threshold);
     }
 
 //    std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
