@@ -57,7 +57,7 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
     }
 
     // Set the threshold
-    std::vector< std::vector<double> > s_threshold, tb_threshold;
+    std::vector<double> s_threshold, tb_threshold;
     if(iteration == 0)
     {
         s_threshold = std::vector<double>(ModelType::get_num_scalars(), -1E300);
@@ -76,32 +76,31 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
     {
         for(size_t i=0; i<stashed_particles.size(); ++i)
         {
-//            if(logl_stash[i] > logl_threshold ||
-//                    (logl_stash[i] == logl_threshold &&
-//                     tb_stash[i] > tb_threshold))
-//            {
-//                above[i] = true;
-//                ++count_above;
-//            }
+            if(is_okay(stashed_scalars[i], stashed_tiebreakers[i],
+                        s_threshold, tb_threshold))
+            {
+                above[i] = true;
+                ++count_above;
+            }
         }
-//        size_t count_below = stash.size() - count_above;
+        size_t count_below = stashed_particles.size() - count_above;
 
-//        for(size_t i=0; i<stash.size(); ++i)
-//        {
-//            if(active && !above[i] && rng.rand() <= 1.0/count_below)
-//            {
+        for(size_t i=0; i<stashed_particles.size(); ++i)
+        {
+            if(active && !above[i] && rng.rand() <= 1.0/count_below)
+            {
 //                logger.log_particle_info(run_id, iteration-1, logl_stash[i]);
-//                logger.save_particle(stash[i]);
-//            }
-//        }
+                logger.save_particle(stashed_particles[i]);
+            }
+        }
 
-//        if(count_above == 0)
-//        {
-//            logX = -std::numeric_limits<double>::max();
-//            active = false;
-//        }
-//        else
-//            logX += log(count_above) - log(stash.size());
+        if(count_above == 0)
+        {
+            logX = -std::numeric_limits<double>::max();
+            active = false;
+        }
+        else
+            logX += log(count_above) - log(stashed_particles.size());
 
 //        logger.log_level(logX, logl_threshold);
     }

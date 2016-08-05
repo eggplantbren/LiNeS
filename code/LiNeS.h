@@ -2,7 +2,6 @@
 #define LiNeS_LiNeS
 
 #include "ClassicLogger.h"
-#include "LNS.h"
 #include "LNSLogger.h"
 
 namespace LiNeS

@@ -5,6 +5,7 @@
 #include "DNest4/code/Utils.h"
 #include "ClassicLogger.h"
 #include "LNSLogger.h"
+#include "LiNeS.h"
 
 #include <iostream>
 #include <iomanip>
