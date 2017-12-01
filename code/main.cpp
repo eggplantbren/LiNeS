@@ -13,18 +13,24 @@ int main()
     LiNeS::ClassicNestedSampler<SpikeSlab> classic_sampler(100);
 
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
-    classic_sampler.run(100.0, 500);
+    classic_sampler.run(100.0, 1000);
 
     // Get a copy of the RNG from the Classic Nested Sampler
     DNest4::RNG rng = classic_sampler.get_rng();
 
-    for(int i=0; i<1000000; ++i)
+    for(int i=0; i<10000; ++i)
     {
         // Create a Linked Nested Sampler
         LiNeS::LNS<SpikeSlab> lns(i+1, classic_sampler.get_logger(), rng);
 
+        // Continue using the same rng
+        rng = lns.get_rng();
+
+        // Number of MCMC steps per level
+        int k = 10000*exp(0.3*rng.randn());
+
         // Run it
-        lns.run(30000, 30);
+        lns.run(k, 100);
 
         // Continue using the same rng
         rng = lns.get_rng();
