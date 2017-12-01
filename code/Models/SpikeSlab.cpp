@@ -38,9 +38,8 @@ double SpikeSlab::log_likelihood() const
         logl1 += -0.5*pow((x - 0.031)/u, 2);
         logl2 += -0.5*pow(x/v, 2);
     }
-    logl1 += log(100.);
 
-    return logsumexp(logl1, logl2);
+    return logsumexp(logl1 + log(0.5), logl2 + log(0.5));
 }
 
 void SpikeSlab::print(std::ostream& out) const
