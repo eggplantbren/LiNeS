@@ -201,12 +201,12 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
                     ++accepts;
                 }
             }
+            ++mcmc_steps_taken;
         }
 
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
-        ++mcmc_steps_taken;
     }
 
     // Backwards
@@ -239,12 +239,12 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
                     ++accepts;
                 }
             }
+            ++mcmc_steps_taken;
         }
 
         stash[i] = particle;
         logl_stash[i] = logl_particle;
         tb_stash[i] = tb_particle;
-        ++mcmc_steps_taken;
     }
 
     std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;

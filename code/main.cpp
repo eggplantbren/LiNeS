@@ -18,7 +18,10 @@ int main()
     // Get a copy of the RNG from the Classic Nested Sampler
     DNest4::RNG rng = classic_sampler.get_rng();
 
-    for(int i=0; i<10000; ++i)
+    // Count MCMC steps
+    unsigned int count_mcmc_steps = 0;
+
+    for(int i=0; i<100; ++i)
     {
         // Create a Linked Nested Sampler
         LiNeS::LNS<SpikeSlab> lns(i+1, classic_sampler.get_logger(), rng);
@@ -27,14 +30,20 @@ int main()
         rng = lns.get_rng();
 
         // Number of MCMC steps per level
-        int k = 10000*exp(0.3*rng.randn());
+        int k = 10000*exp(rng.randn());
 
         // Run it
         lns.run(k, 100);
 
+        // Accumulate number of mcmc steps
+        count_mcmc_steps += lns.get_mcmc_steps_taken();
+
         // Continue using the same rng
         rng = lns.get_rng();
     }
+
+    std::cout << "# Total number of MCMC steps taken (excluding classic NS) = ";
+    std::cout << count_mcmc_steps << '.' << std::endl;
 
     return 0;
 }
