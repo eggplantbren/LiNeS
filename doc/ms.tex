@@ -61,6 +61,25 @@ likelihood function.
 %\end{align}
 
 
+\section{Rosenbrock problem in 50 dimensions}
+
+The prior is
+\begin{align}
+x_i &\sim \textnormal{Uniform}(-10, 10)
+\end{align}
+for $i \in \{0, 1, 2, ..., 49\}$,
+and the likelihood function is
+\begin{align}
+L(\boldsymbol{x}) = \exp\left[-2f(\boldsymbol{x})\right]
+\end{align}
+where
+\begin{align}
+f(\boldsymbol{x}) &= 100(x_{i+1} - x_{i}^2)^2 + (1-x_i)^2.
+\end{align}
+
+
+
+
 \section{Comparison with DNest4}
 
 \subsection{SpikeSlab problem, 20 dimensions, peak at 0.031}
