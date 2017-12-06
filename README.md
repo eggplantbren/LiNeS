@@ -15,7 +15,7 @@ sample the sequence of levels.
 The result will eventually be an embarrassingly parallel MCMC-based
 NS algorithm that correctly compensates for imperfect MCMC sampling.
 
-(c) 2016 Brendon J. Brewer
+(c) 2016--2017 Brendon J. Brewer
 
-LICENCE: MIT. See the LICENSE file for details.
+LICENCE: GNU General Public License v3. See the LICENSE file for details.
 
