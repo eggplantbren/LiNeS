@@ -13,4 +13,7 @@ __pycache__
 doc/ms.aux
 doc/ms.log
 doc/ms.pdf
+doc/ms.blg
+doc/ms.bbl
+doc/references.bib
 doc/lis.pdf

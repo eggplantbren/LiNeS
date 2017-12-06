@@ -20,27 +20,45 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
 
-\section{Introduction}
-Some notation: $\pi(\theta)$ is the prior, $L(\theta)$ is the
-likelihood function. The constrained prior corresponding
-to level $j$ is
+\section{Nested Sampling}
+Nested Sampling \citep{skilling2006nested}
+is a computational method for calculating normalising
+constants of probability distributions. In most applications, this is
+the marginal likelihood or `evidence' from Bayesian inference, which is
+the expected value of the likelihood with respect to the prior distribution
+for the parameters
 \begin{align}
-p_j(\theta) &\propto
-\frac{\pi(\theta)\mathds{1}\left[L(\theta) > L_j\right]}
-{X_j}.
+p(D | M) &= \int p(\theta | M) p(D | \theta, M) \, d\theta
 \end{align}
+where $M$ is a set of model assumptions, $\theta$ is a collection of
+parameters, and $D$ is the data.
 
-The LIS procedure, when applied to the NS sequence of
-distributions, samples a probability distribution over
-$\theta_{j,i}, K_j$ where $j$ indexes the level,
-$i \in \{1, 2, ..., N\}$ is the
-iteration within the level, and $K$ is a discrete
-selection variable (one per level). The distribution for the
-first level's quantities is
+In more computationally-oriented notation, this may be written
 \begin{align}
-p_{\rm LIS}\left(K_0, \left\{\theta_{0,i}\right\}\right)
-&= \frac{1}{N} \prod_{i=K_0+1}^N T(\theta_{0,i} | \theta_{0,i-1})
+Z &= \int \pi(\theta)L(\theta) \, d\theta
 \end{align}
+where $\pi(\theta)$ is the prior distribution and $L(\theta)$ is the
+likelihood function.
+
+%The constrained prior corresponding
+%to level $j$ is
+%\begin{align}
+%p_j(\theta) &\propto
+%\frac{\pi(\theta)\mathds{1}\left[L(\theta) > L_j\right]}
+%{X_j}.
+%\end{align}
+
+%The LIS procedure, when applied to the NS sequence of
+%distributions, samples a probability distribution over
+%$\theta_{j,i}, K_j$ where $j$ indexes the level,
+%$i \in \{1, 2, ..., N\}$ is the
+%iteration within the level, and $K$ is a discrete
+%selection variable (one per level). The distribution for the
+%first level's quantities is
+%\begin{align}
+%p_{\rm LIS}\left(K_0, \left\{\theta_{0,i}\right\}\right)
+%&= \frac{1}{N} \prod_{i=K_0+1}^N T(\theta_{0,i} | \theta_{0,i-1})
+%\end{align}
 
 
 \section{Comparison with DNest4}
@@ -92,9 +110,8 @@ DNest4: Done 321 runs. RMS error = 0.04529294847033139
 LiNeS: Done 468 runs. RMS error = 0.05811019003556211
 
 
-
-\begin{thebibliography}{999}
-\end{thebibliography}
+\bibliographystyle{chicago}
+\bibliography{references}
 
 \end{document}
 
