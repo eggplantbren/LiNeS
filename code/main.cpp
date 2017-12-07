@@ -2,7 +2,7 @@
 #include "LiNeS.h"
 #include "ClassicNestedSampler.h"
 #include "LNS.h"
-#include "Models/SpikeSlab.h"
+#include "Models/Rosenbrock.h"
 
 int main()
 {
@@ -10,10 +10,10 @@ int main()
     LiNeS::clear_all_output_files();
 
     // Create a classic sampler with 100 particles.
-    LiNeS::ClassicNestedSampler<SpikeSlab> classic_sampler(100);
+    LiNeS::ClassicNestedSampler<Rosenbrock> classic_sampler(100);
 
     // Run to 100 nats depth, with 1000 MCMC steps per iteration
-    classic_sampler.run(100.0, 1000);
+    classic_sampler.run(500.0, 10000);
 
     // Get a copy of the RNG from the Classic Nested Sampler
     DNest4::RNG rng = classic_sampler.get_rng();
@@ -24,13 +24,13 @@ int main()
     for(int i=0; i<100; ++i)
     {
         // Create a Linked Nested Sampler
-        LiNeS::LNS<SpikeSlab> lns(i+1, classic_sampler.get_logger(), rng);
+        LiNeS::LNS<Rosenbrock> lns(i+1, classic_sampler.get_logger(), rng);
 
         // Continue using the same rng
         rng = lns.get_rng();
 
         // Number of MCMC steps per level
-        int k = 10000*exp(rng.randn());
+        int k = 100000*exp(rng.randn());
 
         // Run it
         lns.run(k, 100);
