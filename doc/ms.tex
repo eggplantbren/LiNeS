@@ -2,19 +2,29 @@
 \usepackage{amsmath}
 \usepackage{dsfont}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx}
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=2cm]{geometry}
-\usepackage{natbib}
+\usepackage{graphicx}
 \usepackage{microtype}
+\usepackage{natbib}
 
-\title{LiNeS: Linked Nested Sampling}
+\newcommand{\lines}{\texttt{LiNeS}}
+
+\title{\lines: Linked Nested Sampling}
 \author{Brendon J. Brewer}
 \date{}
 
 \begin{document}
 \maketitle
 
-\abstract{\noindent Abstract}
+\abstract{I introduce an approach to Nested Sampling that combines its
+strengths with those of Radford Neal's `Linked Importance Sampling' algorithm.
+The result enables MCMC-based Nested Sampling which can be parallelised
+trivially, and allows for the fact that the MCMC chains used may not
+reach equilibrium. I demonstrate the method on several examples, which appear
+to show that \lines~has comparable performance to classic Nested Sampling
+on small problems, but outperforms it (and Diffusive Nested Sampling)
+on large problems when the MCMC moves
+used are imperfect.}
 
 % Need this after the abstract
 \setlength{\parindent}{0pt}
@@ -39,6 +49,16 @@ Z &= \int \pi(\theta)L(\theta) \, d\theta
 \end{align}
 where $\pi(\theta)$ is the prior distribution and $L(\theta)$ is the
 likelihood function.
+
+\section{Linked Importance Sampling}
+Linked Importance Sampling is another approach to estimating normalising
+constants, invented by \citet{neal2005estimating}. He envisioned using it
+with a `power posterior' or `annealed' sequence of distributions, of the
+following form:
+\begin{align}
+p_{\beta}(\theta) &= \frac{\pi(\theta)L(\theta)^\beta}{Z(\beta)}
+\end{align}
+where $\beta \in [0, 1]$.
 
 %The constrained prior corresponding
 %to level $j$ is
