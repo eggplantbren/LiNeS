@@ -58,7 +58,23 @@ following form:
 \begin{align}
 p_{\beta}(\theta) &= \frac{\pi(\theta)L(\theta)^\beta}{Z(\beta)}
 \end{align}
-where $\beta \in [0, 1]$.
+where $\beta \in [0, 1]$. However, such sequences suffer from well-known
+problems. When a phase change is present, there might be a sudden change
+in the nature of the distribution as $\beta$ is changed slightly. In addition,
+it may be impossible to sample from the power posterior at all if a mixture
+of phases is present in it \citep{skilling2006nested}.
+
+There is no reason why Linked Importance Sampling cannot use other sequences
+of distributions, such as the Nested Sampling sequence, parameterised by
+likelihood cutoff $\ell$:
+\begin{align}
+p_{\ell}(\theta) &= \left\{
+                     \begin{array}{lr}
+                       \frac{\pi(\theta)}{X(\ell)}, & L(\theta) \geq \ell \\
+                       0, &\textnormal{otherwise}.
+                     \end{array}\right.
+\end{align}
+This is the essence of the method proposed in this paper.
 
 %The constrained prior corresponding
 %to level $j$ is
