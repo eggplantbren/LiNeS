@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     for(int i=0; i<100; ++i)
     {
         // Create a Linked Nested Sampler
-        LiNeS::LNS<Rosenbrock> lns(i+1, "levels.txt", rng);
+        LiNeS::LNS<ModelType> lns(i+1, "levels.txt", rng);
 
         // Continue using the same rng
         rng = lns.get_rng();
