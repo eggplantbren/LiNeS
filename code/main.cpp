@@ -3,47 +3,50 @@
 #include "ClassicNestedSampler.h"
 #include "LNS.h"
 #include "Models/Rosenbrock.h"
+#include "DNest4/code/DNest4.h"
 
-int main()
+int main(int argc, char** argv)
 {
+    // Choose the problem
+    typedef Rosenbrock ModelType;
+
     // Clear previous output files
     LiNeS::clear_all_output_files();
 
-    // Create a classic sampler with 100 particles.
-    LiNeS::ClassicNestedSampler<Rosenbrock> classic_sampler(100);
+    // Run DNest4
+	DNest4::CommandLineOptions options(argc, argv);
+	DNest4::Sampler<ModelType> sampler = DNest4::setup<ModelType>(options);
+	sampler.run();
 
-    // Run to 100 nats depth, with 1000 MCMC steps per iteration
-    classic_sampler.run(500.0, 10000);
-
-    // Get a copy of the RNG from the Classic Nested Sampler
-    DNest4::RNG rng = classic_sampler.get_rng();
+    // Get a copy of the first RNG from the DNest4 sampler
+    DNest4::RNG rng = sampler.get_rngs()[0];
 
     // Count MCMC steps
     unsigned int count_mcmc_steps = 0;
 
-    for(int i=0; i<100; ++i)
-    {
-        // Create a Linked Nested Sampler
-        LiNeS::LNS<Rosenbrock> lns(i+1, classic_sampler.get_logger(), rng);
+//    for(int i=0; i<100; ++i)
+//    {
+//        // Create a Linked Nested Sampler
+//        LiNeS::LNS<Rosenbrock> lns(i+1, classic_sampler.get_logger(), rng);
 
-        // Continue using the same rng
-        rng = lns.get_rng();
+//        // Continue using the same rng
+//        rng = lns.get_rng();
 
-        // Number of MCMC steps per level
-        int k = 100000*exp(rng.randn());
+//        // Number of MCMC steps per level
+//        int k = 100000*exp(rng.randn());
 
-        // Run it
-        lns.run(k, 100);
+//        // Run it
+//        lns.run(k, 100);
 
-        // Accumulate number of mcmc steps
-        count_mcmc_steps += lns.get_mcmc_steps_taken();
+//        // Accumulate number of mcmc steps
+//        count_mcmc_steps += lns.get_mcmc_steps_taken();
 
-        // Continue using the same rng
-        rng = lns.get_rng();
-    }
+//        // Continue using the same rng
+//        rng = lns.get_rng();
+//    }
 
-    std::cout << "# Total number of MCMC steps taken (excluding classic NS) = ";
-    std::cout << count_mcmc_steps << '.' << std::endl;
+//    std::cout << "# Total number of MCMC steps taken (excluding classic NS) = ";
+//    std::cout << count_mcmc_steps << '.' << std::endl;
 
     return 0;
 }
