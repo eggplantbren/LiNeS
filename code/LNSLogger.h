@@ -1,12 +1,15 @@
 #ifndef LiNeS_LNSLogger
 #define LiNeS_LNSLogger
 
+#include <cstdlib>
 #include <fstream>
+#include <mutex>
 #include <vector>
-#include <stdlib.h>
 
 namespace LiNeS
 {
+
+static std::mutex mutex;
 
 /*
 * Logger for the results of a *single* LNS run.
@@ -50,10 +53,14 @@ class LNSLogger
 template<class ModelType>
 void LNSLogger::save_particle(const ModelType& particle) const
 {
-    std::fstream fout("particles.txt", std::ios::out | std::ios::app);
-    particle.print(fout);
-    fout<<std::endl;    
-    fout.close();
+    mutex.lock();
+    {
+        std::fstream fout("particles.txt", std::ios::out | std::ios::app);
+        particle.print(fout);
+        fout<<std::endl;    
+        fout.close();
+    }
+    mutex.unlock();
 }
 
 } // namespace LiNeS

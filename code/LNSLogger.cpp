@@ -22,11 +22,15 @@ void LNSLogger::log_level(double logX, double logL)
     levels_logX.push_back(logX);
     levels_logL.push_back(logL);
 
-    std::fstream fout;
-    fout.open("levels_logX.txt", std::ios::out | std::ios::app);
-    fout<<std::setprecision(12);
-    fout<<levels_logX.size()<<' '<<logX<<std::endl;
-    fout.close();
+    mutex.lock();
+    {
+        std::fstream fout;
+        fout.open("levels_logX.txt", std::ios::out | std::ios::app);
+        fout<<std::setprecision(12);
+        fout<<levels_logX.size()<<' '<<logX<<std::endl;
+        fout.close();
+    }
+    mutex.unlock();
 }
 
 void LNSLogger::log_particle_info(unsigned int run_id, size_t level_id,
@@ -36,12 +40,15 @@ void LNSLogger::log_particle_info(unsigned int run_id, size_t level_id,
     particles_level_id.push_back(level_id);
     particles_logL.push_back(logL);
 
-    std::fstream fout;
-
-    fout.open("particles_info.txt", std::ios::out | std::ios::app);
-    fout<<std::setprecision(12);
-    fout<<run_id<<' '<<level_id<<' '<<logL<<std::endl;
-    fout.close();
+    mutex.lock();
+    {
+        std::fstream fout;
+        fout.open("particles_info.txt", std::ios::out | std::ios::app);
+        fout<<std::setprecision(12);
+        fout<<run_id<<' '<<level_id<<' '<<logL<<std::endl;
+        fout.close();
+    }
+    mutex.unlock();
 }
 
 void LNSLogger::clear_output_files()

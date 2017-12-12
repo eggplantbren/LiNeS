@@ -31,14 +31,18 @@ LNS<ModelType>::LNS(unsigned int run_id, const char* levels_file,
     }
     fin.close();
 
-    std::cout<<std::setprecision(8);
+    mutex.lock();
+    {
+        std::cout<<std::setprecision(8);
 
-    std::fstream fout;
-    fout.open("levels_logL.txt", std::ios::out);
-    fout<<std::setprecision(12);
-    for(auto logl: levels_log_likelihoods)
-        fout<<logl<<' ';
-    fout.close();
+        std::fstream fout;
+        fout.open("levels_logL.txt", std::ios::out);
+        fout<<std::setprecision(12);
+        for(auto logl: levels_log_likelihoods)
+            fout<<logl<<' ';
+        fout.close();
+    }
+    mutex.unlock();
 }
 
 template<class ModelType>
@@ -61,14 +65,20 @@ LNS<ModelType>::LNS(unsigned int run_id, const ClassicLogger& classic_logger,
         levels_log_likelihoods.push_back(logl[num_particles*i-1]);
         levels_tiebreakers.push_back(tb[num_particles*i-1]);
     }
-    std::cout<<std::setprecision(8);
 
-    std::fstream fout;
-    fout.open("levels_logL.txt", std::ios::out);
-    fout<<std::setprecision(12);
-    for(auto logl: levels_log_likelihoods)
-        fout<<logl<<' ';
-    fout.close();
+
+    mutex.lock();
+    {
+        std::cout<<std::setprecision(8);
+
+        std::fstream fout;
+        fout.open("levels_logL.txt", std::ios::out);
+        fout<<std::setprecision(12);
+        for(auto logl: levels_log_likelihoods)
+            fout<<logl<<' ';
+        fout.close();
+    }
+    mutex.unlock();
 }
 
 template<class ModelType>
@@ -134,16 +144,24 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         logger.log_level(logX, logl_threshold);
     }
 
-    std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
-    std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
+    mutex.lock();
+    {
+        std::cout<<"# Linked NS run "<<run_id<<", iteration "<<iteration<<". ";
+        std::cout<<"(log(X), log(L)) = ("<<logX<<", "<<logl_threshold<<").\n";
+    }
+    mutex.unlock();
     if(!active)
     {
-        std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
+        mutex.lock();
+            std::cout<<"#    Skipping MCMC.\n#"<<std::endl;
+        mutex.unlock();
         ++iteration;
         return;
     }
 
-    std::cout<<"#    Doing MCMC..."<<std::flush;
+    mutex.lock();
+        std::cout<<"#    Doing MCMC..."<<std::flush;
+    mutex.unlock();
 
     unsigned int K;
     if(iteration == 0)
@@ -247,7 +265,9 @@ void LNS<ModelType>::do_iteration(unsigned int mcmc_steps, unsigned int thin)
         tb_stash[i] = tb_particle;
     }
 
-    std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;
+    mutex.lock();
+        std::cout<<"done. Accepted "<<accepts<<'/'<<tries<<".\n#"<<std::endl;
+    mutex.unlock();
 
     ++iteration;
 }
